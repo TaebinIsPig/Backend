@@ -18,4 +18,7 @@ class QueryAuthenticationPersistenceAdapter(
         return authenticationMapper.toDomain(authenticationEntity)
     }
 
+    override fun existsByPhoneNumber(phoneNumber: String): Boolean {
+        return authenticationRepository.existsById(phoneNumber)
+    }
 }
