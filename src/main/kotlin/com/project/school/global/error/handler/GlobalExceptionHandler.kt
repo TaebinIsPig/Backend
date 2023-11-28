@@ -4,6 +4,7 @@ import com.project.school.global.error.exception.SchoolException
 import com.project.school.global.error.response.ErrorResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
@@ -15,6 +16,13 @@ class GlobalExceptionHandler {
         ResponseEntity(
             ErrorResponse(e.errorCode.message, e.errorCode.status),
             HttpStatus.valueOf(e.errorCode.status)
+        )
+
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<ErrorResponse> =
+        ResponseEntity(
+            ErrorResponse(e.bindingResult.allErrors[0].defaultMessage, HttpStatus.BAD_REQUEST.value()),
+            HttpStatus.valueOf(HttpStatus.BAD_REQUEST.value())
         )
 
 }
