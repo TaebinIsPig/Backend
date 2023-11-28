@@ -13,3 +13,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+
+coolsms:
+  access: ${COOLSMS_ACCESS}
+  secret: ${COOLSMS_SECRET}
+  phone-number: ${COOLSMS_PHONE_NUMBER}
