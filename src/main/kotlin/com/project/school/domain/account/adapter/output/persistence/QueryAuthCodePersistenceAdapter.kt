@@ -5,7 +5,9 @@ import com.project.school.domain.account.adapter.output.persistence.repository.A
 import com.project.school.domain.account.application.port.output.QueryAuthCodePort
 import com.project.school.domain.account.domain.AuthCode
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.stereotype.Component
 
+@Component
 class QueryAuthCodePersistenceAdapter(
     private val authCodeRepository: AuthCodeRepository,
     private val authCodeMapper: AuthCodeMapper
