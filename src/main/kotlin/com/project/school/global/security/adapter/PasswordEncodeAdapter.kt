@@ -12,4 +12,7 @@ class PasswordEncodeAdapter(
     override fun passwordEncode(password: String): String =
         passwordEncoder.encode(password)
 
+    override fun isPasswordMatch(rawPassword: String, encodedPassword: String): Boolean =
+        passwordEncoder.matches(rawPassword, encodedPassword)
+
 }

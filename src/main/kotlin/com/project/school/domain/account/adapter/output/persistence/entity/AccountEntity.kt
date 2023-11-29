@@ -9,7 +9,7 @@ import javax.persistence.*
 @Table(name = "account")
 class AccountEntity(
     @Column(name = "account_idx")
-    override val idx: UUID,
+    override val accountIdx: UUID,
 
     @Column(nullable = false, length = 20)
     val id: String,
@@ -31,4 +31,4 @@ class AccountEntity(
 
     @Enumerated(EnumType.STRING)
     val authority: Authority
-): BaseUUIDEntity(idx)
+): BaseUUIDEntity(accountIdx)

@@ -11,7 +11,7 @@ class AccountMapper(
 
     fun toEntity(domain: Account): AccountEntity =
         AccountEntity(
-            idx = domain.accountIdx,
+            accountIdx = domain.accountIdx,
             id = domain.id,
             password = domain.password,
             name = domain.name,
@@ -20,5 +20,19 @@ class AccountMapper(
             school = domain.school,
             authority = domain.authority
         )
+
+    fun toDomain(entity: AccountEntity?): Account? =
+        entity?.let {
+            Account(
+                accountIdx = entity.accountIdx,
+                id = entity.id,
+                password = entity.password,
+                name = entity.name,
+                studentNumber = studentNumberMapper.toDomain(entity.studentNumber),
+                phoneNumber = entity.phoneNumber,
+                school = entity.school,
+                authority = entity.authority
+            )
+        }
 
 }

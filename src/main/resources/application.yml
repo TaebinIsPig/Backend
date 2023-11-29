@@ -19,6 +19,13 @@ spring:
     port: ${REDIS_PORT}
     database: ${REDIS_DATABASE}
 
+jwt:
+  access-secret: ${JWT_ACCESS_SECRET}
+  refresh-secret: ${JWT_REFRESH_SECRET}
+  time:
+    access-exp: ${JWT_ACCESS_EXP}
+    refresh-exp: ${JWT_REFRESH_EXP}
+
 
 coolsms:
   access: ${COOLSMS_ACCESS}
