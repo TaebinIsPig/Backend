@@ -12,6 +12,9 @@ enum class ErrorCode(
     AUTHENTICATION_NOT_FOUND("인증되지 않은 사용자 입니다.", 404),
     TOO_MANY_AUTHENTICATION_REQUEST("인증 메세지 요청 5번 초과 한 사용자 입니다.", 429),
 
+    // AUTH CODE
+    AUTH_CODE_NOT_FOUND("인증 코드를 찾을 수 없습니다.", 404),
+
     // MESSAGE
     MESSAGE_SEND_FAILED("coolsms 메세지 전송에 실패하였습니다.", 500)
 
