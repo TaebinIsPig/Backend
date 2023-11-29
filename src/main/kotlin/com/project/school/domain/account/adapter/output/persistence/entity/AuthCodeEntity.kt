@@ -6,7 +6,7 @@ import org.springframework.data.redis.core.TimeToLive
 import java.util.concurrent.TimeUnit
 
 @RedisHash("auth_code")
-class AuthCodeEntity(
+data class AuthCodeEntity(
     @Id
     val phoneNumber: String,
 

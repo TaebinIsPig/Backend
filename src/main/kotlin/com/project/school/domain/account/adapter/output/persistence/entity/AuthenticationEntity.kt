@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit
 
 
 @RedisHash("authentication")
-class AuthenticationEntity(
+data class AuthenticationEntity(
     @Id
     val phoneNumber: String,
 
