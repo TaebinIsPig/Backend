@@ -29,7 +29,7 @@ dependencies {
     implementation("io.github.microutils:kotlin-logging:3.0.5")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation ("net.nurigo:sdk:4.3.0")
-    runtimeOnly("com.mysql:mysql-connector-j")
+    implementation("org.mariadb.jdbc:mariadb-java-client:2.1.2")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
