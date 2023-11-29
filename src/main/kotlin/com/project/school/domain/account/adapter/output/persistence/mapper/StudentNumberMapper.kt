@@ -14,4 +14,11 @@ class StudentNumberMapper {
             number = domain.number
         )
 
+    fun toDomain(entity: StudentNumberEntity): StudentNumber =
+        StudentNumber(
+            grade = entity.grade,
+            classNum = entity.classNum,
+            number = entity.number
+        )
+
 }
