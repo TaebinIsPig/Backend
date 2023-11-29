@@ -15,6 +15,11 @@ data class Authentication(
         const val EXPIRED_AT = 7200L
     }
 
+    fun increaseAuthCodeCount(): Authentication =
+        this.copy(
+            authCodeCount = authCodeCount.inc()
+        )
+
     fun increaseAuthenticationCount(): Authentication =
         this.copy(
             authenticationCount = authenticationCount.inc()
