@@ -4,8 +4,10 @@ import com.project.school.domain.account.adapter.input.data.request.SignUpReques
 import com.project.school.domain.account.adapter.input.mapper.AuthDataMapper
 import com.project.school.domain.account.application.port.input.SendAuthCodeUseCase
 import com.project.school.domain.account.application.port.input.SignUpUseCase
+import com.project.school.domain.account.application.port.input.VerifyAuthCodeUseCase
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -18,7 +20,8 @@ import javax.validation.Valid
 class AuthWebAdapter(
     private val authDataMapper: AuthDataMapper,
     private val signUpUseCase: SignUpUseCase,
-    private val sendAuthCodeUseCase: SendAuthCodeUseCase
+    private val sendAuthCodeUseCase: SendAuthCodeUseCase,
+    private val verifyAuthCodeUseCase: VerifyAuthCodeUseCase
 ) {
 
     @PostMapping("/signup")
@@ -29,6 +32,11 @@ class AuthWebAdapter(
     @PostMapping("/send/phone-number/{phoneNumber}")
     fun sendAuthCode(@PathVariable phoneNumber: String): ResponseEntity<Void> =
         sendAuthCodeUseCase.execute(phoneNumber)
+            .run { ResponseEntity.status(HttpStatus.NO_CONTENT).build() }
+
+    @GetMapping("/auth-code/{authCode}/phone-number/{phoneNumber}")
+    fun verifyAuthCode(@PathVariable authCode: Int, @PathVariable phoneNumber: String): ResponseEntity<Void> =
+        verifyAuthCodeUseCase.execute(authCode, phoneNumber)
             .run { ResponseEntity.status(HttpStatus.NO_CONTENT).build() }
 
 }
