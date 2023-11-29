@@ -15,7 +15,7 @@ class CommandAccountPersistenceAdapter(
 
     override fun saveAccount(account: Account): UUID {
         val accountEntity = accountMapper.toEntity(account)
-        return accountRepository.save(accountEntity).idx
+        return accountRepository.save(accountEntity).accountIdx
     }
 
 }
