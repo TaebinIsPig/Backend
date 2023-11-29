@@ -20,9 +20,11 @@ spring:
     database: ${REDIS_DATABASE}
 
 jwt:
+  access-secret: ${JWT_ACCESS_SECRET}
+  refresh-secret: ${JWT_REFRESH_SECRET}
   time:
-    accessExp: ${JWT_ACCESS_EXP}
-    refreshExp: ${JWT_REFRESH_EXP}
+    access-exp: ${JWT_ACCESS_EXP}
+    refresh-exp: ${JWT_REFRESH_EXP}
 
 
 coolsms:
