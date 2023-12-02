@@ -4,6 +4,7 @@ import com.project.school.common.annotation.ServiceWithTransaction
 import com.project.school.domain.account.application.common.util.AuthenticationValidator
 import com.project.school.domain.account.application.event.DeleteAuthenticationEvent
 import com.project.school.domain.account.application.exception.DuplicatedAccountIdException
+import com.project.school.domain.account.application.exception.DuplicatedAccountPhoneNumberException
 import com.project.school.domain.account.application.port.input.SignUpUseCase
 import com.project.school.domain.account.application.port.input.dto.SignUpDto
 import com.project.school.domain.account.application.port.output.CommandAccountPort
@@ -25,7 +26,8 @@ class SignUpService(
 ): SignUpUseCase {
 
     override fun execute(dto: SignUpDto) {
-        if (queryAccountPort.existById(dto.id)) throw DuplicatedAccountIdException()
+        if (queryAccountPort.existsById(dto.id)) throw DuplicatedAccountIdException()
+        if (queryAccountPort.existsByPhoneNumber(dto.phoneNumber)) throw DuplicatedAccountPhoneNumberException()
 
         val authentication = authenticationValidator.verifyAuthenticationByPhoneNumber(dto.phoneNumber)
         val deleteAuthenticationEvent = DeleteAuthenticationEvent(authentication)
