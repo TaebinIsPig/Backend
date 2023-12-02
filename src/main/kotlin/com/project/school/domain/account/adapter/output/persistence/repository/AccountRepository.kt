@@ -7,6 +7,7 @@ import java.util.UUID
 interface AccountRepository: CrudRepository<AccountEntity, UUID> {
 
     fun existsById(id: String): Boolean
+    fun existsByPhoneNumber(phoneNumber: String): Boolean
     fun findById(id: String): AccountEntity?
 
 }
