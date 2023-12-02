@@ -4,7 +4,10 @@ import com.project.school.domain.account.domain.Account
 
 interface QueryAccountPort {
 
-    fun existById(id: String): Boolean
+    fun existsById(id: String): Boolean
+
+    fun existsByPhoneNumber(phoneNumber: String): Boolean
+
     fun findByIdOrNull(id: String): Account?
 
 }

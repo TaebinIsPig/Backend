@@ -12,8 +12,11 @@ class QueryAccountPersistenceAdapter(
     private val accountMapper: AccountMapper
 ): QueryAccountPort {
 
-    override fun existById(id: String): Boolean =
+    override fun existsById(id: String): Boolean =
         accountRepository.existsById(id)
+
+    override fun existsByPhoneNumber(phoneNumber: String): Boolean =
+        accountRepository.existsByPhoneNumber(phoneNumber)
 
     override fun findByIdOrNull(id: String): Account? {
         val accountEntity = accountRepository.findById(id)
