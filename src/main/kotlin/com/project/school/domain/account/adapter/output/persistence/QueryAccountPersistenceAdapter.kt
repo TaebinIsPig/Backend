@@ -23,4 +23,9 @@ class QueryAccountPersistenceAdapter(
         return accountMapper.toDomain(accountEntity)
     }
 
+    override fun findByPhoneNumberOrNull(phoneNumber: String): Account? {
+        val accountEntity = accountRepository.findByPhoneNumber(phoneNumber)
+        return accountMapper.toDomain(accountEntity)
+    }
+
 }
