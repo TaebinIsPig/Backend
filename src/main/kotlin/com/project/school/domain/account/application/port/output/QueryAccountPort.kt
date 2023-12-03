@@ -10,4 +10,6 @@ interface QueryAccountPort {
 
     fun findByIdOrNull(id: String): Account?
 
+    fun findByPhoneNumberOrNull(phoneNumber: String): Account?
+
 }
