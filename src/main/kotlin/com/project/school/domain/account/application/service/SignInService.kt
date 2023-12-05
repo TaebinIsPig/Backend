@@ -11,7 +11,10 @@ import com.project.school.domain.account.application.port.output.QueryAccountPor
 import com.project.school.domain.account.application.port.output.TokenGeneratePort
 import com.project.school.domain.account.application.port.output.dto.TokenDto
 import com.project.school.domain.account.domain.Account
+import mu.KotlinLogging
 import org.springframework.context.ApplicationEventPublisher
+
+private val log = KotlinLogging.logger {  }
 
 @ServiceWithTransaction
 class SignInService(
@@ -32,6 +35,10 @@ class SignInService(
         val token = tokenGeneratePort.generateToken(account.accountIdx, account.authority)
 
         publishSaveRefreshToken(token, account)
+
+        log.info("success login")
+        log.info(token.refreshToken)
+        log.info(token.accessToken)
 
         return token
     }
