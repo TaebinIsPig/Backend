@@ -21,6 +21,8 @@ enum class ErrorCode(
     TOO_MANY_AUTH_CODE_REQUEST("인증 코드 확인 요청을 5번 초과한 사용자 입니다.", 429),
 
     // MESSAGE
-    MESSAGE_SEND_FAILED("coolsms 메세지 전송에 실패하였습니다.", 500)
+    MESSAGE_SEND_FAILED("coolsms 메세지 전송에 실패하였습니다.", 500),
 
+    // TOKEN
+    INVALID_TOKEN_TYPE("유효하지 않은 토큰 타입 입니다.", 401),
 }
