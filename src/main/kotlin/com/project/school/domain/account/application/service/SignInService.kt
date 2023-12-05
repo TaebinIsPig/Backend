@@ -31,9 +31,13 @@ class SignInService(
         val account: Account = queryAccountPort.findByIdOrNull(dto.id)
             ?: throw AccountNotFoundException()
 
+        log.info("test2")
+
         if (!passwordEncodePort.isPasswordMatch(dto.password, account.password)) {
             throw PasswordNotMatchException()
         }
+
+        log.info("test3")
 
         val token = tokenGeneratePort.generateToken(account.accountIdx, account.authority)
 
