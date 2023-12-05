@@ -25,6 +25,9 @@ class SignInService(
 ): SignInUseCase {
 
     override fun execute(dto: SignInDto): TokenDto {
+
+        log.info("test")
+
         val account: Account = queryAccountPort.findByIdOrNull(dto.id)
             ?: throw AccountNotFoundException()
 
