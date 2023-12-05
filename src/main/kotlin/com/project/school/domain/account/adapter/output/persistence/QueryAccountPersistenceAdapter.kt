@@ -4,7 +4,9 @@ import com.project.school.domain.account.adapter.output.persistence.mapper.Accou
 import com.project.school.domain.account.adapter.output.persistence.repository.AccountRepository
 import com.project.school.domain.account.application.port.output.QueryAccountPort
 import com.project.school.domain.account.domain.Account
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
+import java.util.*
 
 @Component
 class QueryAccountPersistenceAdapter(
@@ -12,11 +14,24 @@ class QueryAccountPersistenceAdapter(
     private val accountMapper: AccountMapper
 ): QueryAccountPort {
 
-    override fun existById(id: String): Boolean =
+    override fun existsById(id: String): Boolean =
         accountRepository.existsById(id)
+
+    override fun existsByPhoneNumber(phoneNumber: String): Boolean =
+        accountRepository.existsByPhoneNumber(phoneNumber)
 
     override fun findByIdOrNull(id: String): Account? {
         val accountEntity = accountRepository.findById(id)
+        return accountMapper.toDomain(accountEntity)
+    }
+
+    override fun findByIdxOrNull(idx: UUID): Account? {
+        val accountEntity = accountRepository.findByIdOrNull(idx)
+        return accountMapper.toDomain(accountEntity)
+    }
+
+    override fun findByPhoneNumberOrNull(phoneNumber: String): Account? {
+        val accountEntity = accountRepository.findByPhoneNumber(phoneNumber)
         return accountMapper.toDomain(accountEntity)
     }
 

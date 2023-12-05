@@ -14,4 +14,13 @@ class RefreshTokenMapper {
             expiredAt = domain.expiredAt
         )
 
+    fun toDomain(entity: RefreshTokenEntity?): RefreshToken? =
+        entity?.let {
+            RefreshToken(
+                refreshToken = it.refreshToken,
+                accountIdx = entity.accountIdx,
+                expiredAt = entity.expiredAt
+            )
+        }
+
 }

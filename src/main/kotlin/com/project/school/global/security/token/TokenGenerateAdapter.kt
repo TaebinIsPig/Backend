@@ -3,8 +3,8 @@ package com.project.school.global.security.token
 import com.project.school.domain.account.application.port.output.TokenGeneratePort
 import com.project.school.domain.account.application.port.output.dto.TokenDto
 import com.project.school.domain.account.domain.Authority
-import com.project.school.global.security.token.properties.JwtExpTimeProperties
-import com.project.school.global.security.token.properties.JwtProperties
+import com.project.school.global.security.token.common.properties.JwtExpTimeProperties
+import com.project.school.global.security.token.common.properties.JwtProperties
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.stereotype.Component

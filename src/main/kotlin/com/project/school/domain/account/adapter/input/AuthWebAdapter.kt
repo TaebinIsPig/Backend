@@ -4,16 +4,15 @@ import com.project.school.domain.account.adapter.input.data.request.SignInReques
 import com.project.school.domain.account.adapter.input.data.request.SignUpRequest
 import com.project.school.domain.account.adapter.input.data.response.TokenResponse
 import com.project.school.domain.account.adapter.input.mapper.AuthDataMapper
-import com.project.school.domain.account.application.port.input.SendAuthCodeUseCase
-import com.project.school.domain.account.application.port.input.SignInUseCase
-import com.project.school.domain.account.application.port.input.SignUpUseCase
-import com.project.school.domain.account.application.port.input.VerifyAuthCodeUseCase
+import com.project.school.domain.account.application.port.input.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
@@ -24,8 +23,9 @@ class AuthWebAdapter(
     private val authDataMapper: AuthDataMapper,
     private val signUpUseCase: SignUpUseCase,
     private val signInUseCase: SignInUseCase,
+    private val reissueTokenUseCase: ReissueTokenUseCase,
     private val sendAuthCodeUseCase: SendAuthCodeUseCase,
-    private val verifyAuthCodeUseCase: VerifyAuthCodeUseCase,
+    private val verifyAuthCodeUseCase: VerifyAuthCodeUseCase
 ) {
 
     @PostMapping("/signup")
@@ -36,6 +36,12 @@ class AuthWebAdapter(
     @PostMapping("/signin")
     fun signIn(@RequestBody @Valid request: SignInRequest): ResponseEntity<TokenResponse> =
         signInUseCase.execute(authDataMapper toDto request)
+            .let { authDataMapper toResponse it }
+            .let { ResponseEntity.ok(it) }
+
+    @PatchMapping("/reissue")
+    fun reissueToken(@RequestHeader refreshToken: String): ResponseEntity<TokenResponse> =
+        reissueTokenUseCase.execute(refreshToken)
             .let { authDataMapper toResponse it }
             .let { ResponseEntity.ok(it) }
 

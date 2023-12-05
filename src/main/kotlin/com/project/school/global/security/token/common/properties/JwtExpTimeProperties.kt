@@ -1,4 +1,4 @@
-package com.project.school.global.security.token.properties
+package com.project.school.global.security.token.common.properties
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
