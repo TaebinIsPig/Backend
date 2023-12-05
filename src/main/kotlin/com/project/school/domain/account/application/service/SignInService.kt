@@ -25,27 +25,16 @@ class SignInService(
 ): SignInUseCase {
 
     override fun execute(dto: SignInDto): TokenDto {
-
-        log.info("test")
-
         val account: Account = queryAccountPort.findByIdOrNull(dto.id)
             ?: throw AccountNotFoundException()
-
-        log.info("test2")
 
         if (!passwordEncodePort.isPasswordMatch(dto.password, account.password)) {
             throw PasswordNotMatchException()
         }
 
-        log.info("test3")
-
         val token = tokenGeneratePort.generateToken(account.accountIdx, account.authority)
 
         publishSaveRefreshToken(token, account)
-
-        log.info("success login")
-        log.info(token.refreshToken)
-        log.info(token.accessToken)
 
         return token
     }
