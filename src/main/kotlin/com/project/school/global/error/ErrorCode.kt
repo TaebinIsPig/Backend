@@ -26,4 +26,5 @@ enum class ErrorCode(
     // TOKEN
     INVALID_TOKEN("유효하지 않은 토큰입니다.", 401),
     INVALID_TOKEN_TYPE("유효하지 않은 토큰 타입 입니다.", 401),
+    EXPIRED_REFRESH_TOKEN("만료된 refreshToken 입니다.", 401)
 }
