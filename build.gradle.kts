@@ -38,6 +38,9 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
     implementation("io.springfox:springfox-swagger-ui:3.0.0")
     implementation("io.springfox:springfox-boot-starter:3.0.0")
+    implementation(platform("org.springframework.cloud:spring-cloud-dependencies:2021.0.5"))
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+
 }
 
 tasks.withType<KotlinCompile> {
