@@ -31,5 +31,6 @@ enum class ErrorCode(
 
     // FEIGN
     FEIGN_BAD_REQUEST("Feign Bad Request", 400),
-    FEIGN_UNAUTHORIZED("Feign Unauthorized", 401)
+    FEIGN_UNAUTHORIZED("Feign Unauthorized", 401),
+    FEIGN_FORBIDDEN("Feign Forbidden", 403)
 }
