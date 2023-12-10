@@ -30,5 +30,6 @@ enum class ErrorCode(
     EXPIRED_REFRESH_TOKEN("만료된 refreshToken 입니다.", 401),
 
     // FEIGN
-    FEIGN_BAD_REQUEST("Feign Bad Request", 400)
+    FEIGN_BAD_REQUEST("Feign Bad Request", 400),
+    FEIGN_UNAUTHORIZED("Feign Unauthorized", 401)
 }
