@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/v1/account")
+@RequestMapping("api/v1/account")
 class AccountWebAdapter(
     private val accountDataMapper: AccountDataMapper,
     private val findAccountIdUseCase: FindAccountIdUseCase,
