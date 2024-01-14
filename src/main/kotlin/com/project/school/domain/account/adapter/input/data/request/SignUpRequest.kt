@@ -1,5 +1,6 @@
 package com.project.school.domain.account.adapter.input.data.request
 
+import com.project.school.domain.school.adapter.input.data.request.SchoolRequest
 import org.hibernate.validator.constraints.Length
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Pattern
@@ -29,5 +30,5 @@ data class SignUpRequest(
     val phoneNumber: String,
 
     @field:NotBlank(message = "학교는 필수값입니다.")
-    val school: String
+    val school: SchoolRequest
 )

@@ -6,5 +6,5 @@ data class SignUpDto(
     val name: String,
     val studentNumber: StudentNumberDto,
     val phoneNumber: String,
-    val school: String
+    val school: SchoolDto
 )
