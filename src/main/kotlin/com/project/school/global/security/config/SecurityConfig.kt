@@ -1,5 +1,6 @@
 package com.project.school.global.security.config
 
+import com.project.school.domain.account.domain.Authority
 import com.project.school.global.security.handler.CustomAccessDeniedHandler
 import com.project.school.global.security.handler.CustomAuthenticationEntryPoint
 import com.project.school.global.security.token.TokenParseAdapter
@@ -35,6 +36,7 @@ class SecurityConfig(
             .mvcMatchers("/api/v1/auth/**").permitAll()
             .mvcMatchers(HttpMethod.GET, "/api/v1/account/phone-number/{phoneNumber}").permitAll()
             .mvcMatchers(HttpMethod.PATCH, "/api/v1/account/find/password").permitAll()
+            .mvcMatchers(HttpMethod.GET, "/api/v1/account/profile").hasAuthority(Authority.ROLE_ACCOUNT.name)
             .mvcMatchers(HttpMethod.GET, "/api/v1/school/search").permitAll()
             .anyRequest().permitAll()
     }
