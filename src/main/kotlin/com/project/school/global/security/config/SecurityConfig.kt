@@ -35,6 +35,7 @@ class SecurityConfig(
             .mvcMatchers("/api/v1/auth/**").permitAll()
             .mvcMatchers(HttpMethod.GET, "/api/v1/account/phone-number/{phoneNumber}").permitAll()
             .mvcMatchers(HttpMethod.PATCH, "/api/v1/account/find/password").permitAll()
+            .mvcMatchers(HttpMethod.GET, "/api/v1/school/search").permitAll()
             .anyRequest().permitAll()
     }
 
