@@ -6,12 +6,14 @@ import com.project.school.domain.account.adapter.input.data.response.TokenRespon
 import com.project.school.domain.account.application.port.input.dto.SignInDto
 import com.project.school.domain.account.application.port.input.dto.SignUpDto
 import com.project.school.domain.account.application.port.output.dto.TokenDto
+import com.project.school.domain.school.adapter.input.mapper.SchoolDataMapper
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 
 @Component
 class AuthDataMapper(
-    private val studentNumberDataMapper: StudentNumberDataMapper
+    private val studentNumberDataMapper: StudentNumberDataMapper,
+    private val schoolDataMapper: SchoolDataMapper
 ) {
 
     infix fun toDto(request: SignUpRequest): SignUpDto =
@@ -21,7 +23,7 @@ class AuthDataMapper(
             name = request.name,
             studentNumber = studentNumberDataMapper.toDto(request.studentNumber),
             phoneNumber = request.phoneNumber,
-            school = request.school
+            school = schoolDataMapper.toDto(request.school)
         )
 
     infix fun toDto(request: SignInRequest): SignInDto =
