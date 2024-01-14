@@ -13,6 +13,7 @@ import com.project.school.domain.account.application.port.output.QueryAccountPor
 import com.project.school.domain.account.domain.Account
 import com.project.school.domain.account.domain.Authority
 import com.project.school.domain.account.domain.StudentNumber
+import com.project.school.domain.school.domain.School
 import org.springframework.context.ApplicationEventPublisher
 import java.util.*
 
@@ -45,7 +46,12 @@ class SignUpService(
                     it.studentNumber.number
                 ),
                 phoneNumber = it.phoneNumber,
-                school = it.school,
+                school = School(
+                    educationCode = it.school.educationCode,
+                    adminCode = it.school.adminCode,
+                    schoolName = it.school.schoolName,
+                    schoolType = it.school.schoolType
+                ),
                 authority = Authority.ROLE_ACCOUNT
             )
         }

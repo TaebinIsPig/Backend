@@ -34,3 +34,6 @@ coolsms:
   access: ${COOLSMS_ACCESS}
   secret: ${COOLSMS_SECRET}
   phone-number: ${COOLSMS_PHONE_NUMBER}
+
+neis:
+  authKey: ${NEIS_AUTH_KEY}

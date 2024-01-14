@@ -2,6 +2,7 @@ package com.project.school.domain.account.adapter.output.persistence.entity
 
 import com.project.school.common.entity.BaseUUIDEntity
 import com.project.school.domain.account.domain.Authority
+import com.project.school.domain.school.adapter.output.persistence.entity.SchoolEntity
 import java.util.*
 import javax.persistence.*
 
@@ -26,8 +27,8 @@ class AccountEntity(
     @Column(nullable = false, length = 15)
     val phoneNumber: String,
 
-    @Column(nullable = false)
-    val school: String,
+    @Embedded
+    val school: SchoolEntity,
 
     @Enumerated(EnumType.STRING)
     val authority: Authority

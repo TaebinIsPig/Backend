@@ -27,7 +27,7 @@ class FindAccountProfileService(
                 classNum = account.studentNumber.classNum,
                 number = account.studentNumber.number
             ),
-            school = account.school
+            school = account.school.schoolName
         )
     }
 

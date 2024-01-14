@@ -27,5 +27,10 @@ enum class ErrorCode(
     INVALID_TOKEN("유효하지 않은 토큰입니다.", 401),
     INVALID_TOKEN_TYPE("유효하지 않은 토큰 타입 입니다.", 401),
     EXPIRED_ACCESS_TOKEN("만료된 accessToken 입니다.", 401),
-    EXPIRED_REFRESH_TOKEN("만료된 refreshToken 입니다.", 401)
+    EXPIRED_REFRESH_TOKEN("만료된 refreshToken 입니다.", 401),
+
+    // FEIGN
+    FEIGN_BAD_REQUEST("Feign Bad Request", 400),
+    FEIGN_UNAUTHORIZED("Feign Unauthorized", 401),
+    FEIGN_FORBIDDEN("Feign Forbidden", 403)
 }
