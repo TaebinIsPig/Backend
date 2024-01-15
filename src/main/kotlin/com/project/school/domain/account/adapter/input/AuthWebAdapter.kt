@@ -7,6 +7,7 @@ import com.project.school.domain.account.adapter.input.mapper.AuthDataMapper
 import com.project.school.domain.account.application.port.input.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -25,7 +26,8 @@ class AuthWebAdapter(
     private val signInUseCase: SignInUseCase,
     private val reissueTokenUseCase: ReissueTokenUseCase,
     private val sendAuthCodeUseCase: SendAuthCodeUseCase,
-    private val verifyAuthCodeUseCase: VerifyAuthCodeUseCase
+    private val verifyAuthCodeUseCase: VerifyAuthCodeUseCase,
+    private val logoutAccountUseCase: LogoutAccountUseCase
 ) {
 
     @PostMapping("/signup")
@@ -53,6 +55,11 @@ class AuthWebAdapter(
     @GetMapping("/auth-code/{authCode}/phone-number/{phoneNumber}")
     fun verifyAuthCode(@PathVariable authCode: Int, @PathVariable phoneNumber: String): ResponseEntity<Void> =
         verifyAuthCodeUseCase.execute(authCode, phoneNumber)
+            .run { ResponseEntity.status(HttpStatus.NO_CONTENT).build() }
+
+    @DeleteMapping("/logout")
+    fun logoutAccount(@RequestHeader refreshToken: String): ResponseEntity<Void> =
+        logoutAccountUseCase.execute(refreshToken)
             .run { ResponseEntity.status(HttpStatus.NO_CONTENT).build() }
 
 }
