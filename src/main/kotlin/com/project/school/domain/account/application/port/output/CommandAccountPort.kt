@@ -6,5 +6,6 @@ import java.util.UUID
 interface CommandAccountPort {
 
     fun saveAccount(account: Account): UUID
+    fun deleteAccount(account: Account)
 
 }
