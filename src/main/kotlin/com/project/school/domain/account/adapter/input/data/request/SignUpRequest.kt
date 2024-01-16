@@ -29,6 +29,5 @@ data class SignUpRequest(
     @field:Size(min = 10, max = 11, message = "전화번호의 글자 수는 10 ~ 11자 사이여야 합니다.")
     val phoneNumber: String,
 
-    @field:NotBlank(message = "학교는 필수값입니다.")
     val school: SchoolRequest
 )
