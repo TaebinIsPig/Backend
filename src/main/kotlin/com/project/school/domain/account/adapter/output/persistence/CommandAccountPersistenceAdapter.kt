@@ -18,4 +18,9 @@ class CommandAccountPersistenceAdapter(
         return accountRepository.save(accountEntity).accountIdx
     }
 
+    override fun deleteAccount(account: Account) {
+        val accountEntity = accountMapper.toEntity(account)
+        accountRepository.delete(accountEntity)
+    }
+
 }

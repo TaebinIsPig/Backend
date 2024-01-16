@@ -30,9 +30,9 @@ class SignUpService(
         if (queryAccountPort.existsById(dto.id)) throw DuplicatedAccountIdException()
         if (queryAccountPort.existsByPhoneNumber(dto.phoneNumber)) throw DuplicatedAccountPhoneNumberException()
 
-        val authentication = authenticationValidator.verifyAuthenticationByPhoneNumber(dto.phoneNumber)
-        val deleteAuthenticationEvent = DeleteAuthenticationEvent(authentication)
-        publisher.publishEvent(deleteAuthenticationEvent)
+//        val authentication = authenticationValidator.verifyAuthenticationByPhoneNumber(dto.phoneNumber)
+//        val deleteAuthenticationEvent = DeleteAuthenticationEvent(authentication)
+//        publisher.publishEvent(deleteAuthenticationEvent)
 
         val account = dto.let {
             Account(
