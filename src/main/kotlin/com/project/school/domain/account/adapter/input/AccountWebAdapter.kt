@@ -3,11 +3,13 @@ package com.project.school.domain.account.adapter.input
 import com.project.school.domain.account.adapter.input.data.request.FindAccountPasswordRequest
 import com.project.school.domain.account.adapter.input.data.response.ProfileResponse
 import com.project.school.domain.account.adapter.input.mapper.AccountDataMapper
+import com.project.school.domain.account.application.port.input.AccountWithdrawUseCase
 import com.project.school.domain.account.application.port.input.FindAccountIdUseCase
 import com.project.school.domain.account.application.port.input.FindAccountPasswordUseCase
 import com.project.school.domain.account.application.port.input.FindAccountProfileUseCase
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -21,7 +23,8 @@ class AccountWebAdapter(
     private val accountDataMapper: AccountDataMapper,
     private val findAccountIdUseCase: FindAccountIdUseCase,
     private val findAccountPasswordUseCase: FindAccountPasswordUseCase,
-    private val findAccountProfileUseCase: FindAccountProfileUseCase
+    private val findAccountProfileUseCase: FindAccountProfileUseCase,
+    private val accountWithdrawUseCase: AccountWithdrawUseCase
 ) {
 
     @GetMapping("/find/id/phone-number/{phoneNumber}")
@@ -39,5 +42,10 @@ class AccountWebAdapter(
         findAccountProfileUseCase.execute()
             .let { accountDataMapper toResponse it }
             .let { ResponseEntity.ok(it) }
+
+    @DeleteMapping("/withdraw/phone-number/{phoneNumber}")
+    fun accountWithdraw(@PathVariable phoneNumber: String): ResponseEntity<Void> =
+        accountWithdrawUseCase.execute(phoneNumber)
+            .run { ResponseEntity.status(HttpStatus.RESET_CONTENT).build() }
 
 }
