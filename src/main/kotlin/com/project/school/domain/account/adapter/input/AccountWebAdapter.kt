@@ -1,12 +1,10 @@
 package com.project.school.domain.account.adapter.input
 
 import com.project.school.domain.account.adapter.input.data.request.FindAccountPasswordRequest
+import com.project.school.domain.account.adapter.input.data.request.UpdateAccountProfileRequest
 import com.project.school.domain.account.adapter.input.data.response.ProfileResponse
 import com.project.school.domain.account.adapter.input.mapper.AccountDataMapper
-import com.project.school.domain.account.application.port.input.AccountWithdrawUseCase
-import com.project.school.domain.account.application.port.input.FindAccountIdUseCase
-import com.project.school.domain.account.application.port.input.FindAccountPasswordUseCase
-import com.project.school.domain.account.application.port.input.FindAccountProfileUseCase
+import com.project.school.domain.account.application.port.input.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -24,7 +22,8 @@ class AccountWebAdapter(
     private val findAccountIdUseCase: FindAccountIdUseCase,
     private val findAccountPasswordUseCase: FindAccountPasswordUseCase,
     private val findAccountProfileUseCase: FindAccountProfileUseCase,
-    private val accountWithdrawUseCase: AccountWithdrawUseCase
+    private val accountWithdrawUseCase: AccountWithdrawUseCase,
+    private val updateAccountProfileUseCase: UpdateAccountProfileUseCase
 ) {
 
     @GetMapping("/find/id/phone-number/{phoneNumber}")
@@ -46,6 +45,11 @@ class AccountWebAdapter(
     @DeleteMapping("/withdraw/phone-number/{phoneNumber}")
     fun accountWithdraw(@PathVariable phoneNumber: String): ResponseEntity<Void> =
         accountWithdrawUseCase.execute(phoneNumber)
+            .run { ResponseEntity.status(HttpStatus.RESET_CONTENT).build() }
+
+    @PatchMapping("/profile")
+    fun updateAccountProfile(@RequestBody request: UpdateAccountProfileRequest): ResponseEntity<Void> =
+        updateAccountProfileUseCase.execute(accountDataMapper toDto request)
             .run { ResponseEntity.status(HttpStatus.RESET_CONTENT).build() }
 
 }
