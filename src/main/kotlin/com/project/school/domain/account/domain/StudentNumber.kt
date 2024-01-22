@@ -4,7 +4,7 @@ import com.project.school.common.annotation.Aggregate
 
 @Aggregate
 data class StudentNumber(
-    val grade: Int,
-    val classNum: Int,
-    val number: Int
+    var grade: Int,
+    var classNum: Int,
+    var number: Int
 )
