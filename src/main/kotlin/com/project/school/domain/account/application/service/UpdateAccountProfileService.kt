@@ -4,6 +4,7 @@ import com.project.school.common.annotation.ServiceWithTransaction
 import com.project.school.domain.account.application.common.util.AuthenticationValidator
 import com.project.school.domain.account.application.event.DeleteAuthenticationEvent
 import com.project.school.domain.account.application.exception.AccountNotFoundException
+import com.project.school.domain.account.application.exception.DuplicatedAccountPhoneNumberException
 import com.project.school.domain.account.application.port.input.UpdateAccountProfileUseCase
 import com.project.school.domain.account.application.port.input.dto.UpdateAccountProfileDto
 import com.project.school.domain.account.application.port.output.AccountSecurityPort
@@ -26,6 +27,7 @@ class UpdateAccountProfileService(
             ?: throw AccountNotFoundException()
 
         if (account.phoneNumber != dto.phoneNumber) {
+            if (queryAccountPort.existsByPhoneNumber(dto.phoneNumber)) throw DuplicatedAccountPhoneNumberException()
             val authentication = authenticationValidator.verifyAuthenticationByPhoneNumber(dto.phoneNumber)
             publisher.publishEvent(DeleteAuthenticationEvent(authentication))
         }
