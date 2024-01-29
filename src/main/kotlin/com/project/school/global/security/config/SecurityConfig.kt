@@ -39,6 +39,7 @@ class SecurityConfig(
             .mvcMatchers(HttpMethod.GET, "/api/v1/account/profile").hasAuthority(Authority.ROLE_ACCOUNT.name)
             .mvcMatchers(HttpMethod.PATCH, "/api/v1/account/profile").hasAuthority(Authority.ROLE_ACCOUNT.name)
             .mvcMatchers(HttpMethod.GET, "/api/v1/school/search").permitAll()
+            .mvcMatchers(HttpMethod.GET, "/api/v1/school/meals").hasAuthority(Authority.ROLE_ACCOUNT.name)
             .anyRequest().permitAll()
     }
 
