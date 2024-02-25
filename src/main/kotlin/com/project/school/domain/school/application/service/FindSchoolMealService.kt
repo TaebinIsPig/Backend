@@ -27,8 +27,8 @@ class FindSchoolMealService(
             "json",
             page,
             3,
-            dto.educationCode,
-            dto.adminCode,
+            account.school.educationCode,
+            account.school.adminCode,
             dto.date
         )
         return schoolMeal.map {

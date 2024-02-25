@@ -29,8 +29,6 @@ class SchoolDataMapper {
 
     infix fun toDto(request: FindSchoolMealRequest): FindSchoolMealDto =
         FindSchoolMealDto(
-            educationCode = request.educationCode,
-            adminCode = request.adminCode,
             date = request.date
         )
 
