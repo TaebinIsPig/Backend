@@ -6,7 +6,6 @@ import com.project.school.domain.account.application.port.output.AccountSecurity
 import com.project.school.domain.account.application.port.output.QueryAccountPort
 import com.project.school.domain.school.adapter.output.neis.properties.NeisProperties
 import com.project.school.domain.school.application.port.input.FindSchoolMealUseCase
-import com.project.school.domain.school.application.port.input.dto.FindSchoolMealDto
 import com.project.school.domain.school.application.port.input.dto.SchoolMealDto
 import com.project.school.domain.school.application.port.output.FindSchoolMealPort
 
@@ -18,7 +17,7 @@ class FindSchoolMealService(
     private val findSchoolMealPort: FindSchoolMealPort
 ): FindSchoolMealUseCase {
 
-    override fun execute(dto: FindSchoolMealDto): List<SchoolMealDto> {
+    override fun execute(date: String): List<SchoolMealDto> {
         val accountIdx = accountSecurityPort.getCurrentAccountIdx()
         val account = queryAccountPort.findByIdxOrNull(accountIdx)
             ?: throw AccountNotFoundException()
@@ -29,7 +28,7 @@ class FindSchoolMealService(
             3,
             account.school.educationCode,
             account.school.adminCode,
-            dto.date
+            date
         )
         return schoolMeal.map {
             SchoolMealDto(
