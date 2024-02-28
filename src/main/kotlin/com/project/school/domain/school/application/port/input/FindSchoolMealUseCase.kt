@@ -5,6 +5,6 @@ import com.project.school.domain.school.application.port.input.dto.SchoolMealDto
 
 interface FindSchoolMealUseCase {
 
-    fun execute(page: Int, dto: FindSchoolMealDto): List<SchoolMealDto>
+    fun execute(dto: FindSchoolMealDto): List<SchoolMealDto>
 
 }
