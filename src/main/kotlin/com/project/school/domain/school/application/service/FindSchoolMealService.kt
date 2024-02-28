@@ -18,14 +18,14 @@ class FindSchoolMealService(
     private val findSchoolMealPort: FindSchoolMealPort
 ): FindSchoolMealUseCase {
 
-    override fun execute(page: Int, dto: FindSchoolMealDto): List<SchoolMealDto> {
+    override fun execute(dto: FindSchoolMealDto): List<SchoolMealDto> {
         val accountIdx = accountSecurityPort.getCurrentAccountIdx()
         val account = queryAccountPort.findByIdxOrNull(accountIdx)
             ?: throw AccountNotFoundException()
         val schoolMeal = findSchoolMealPort.findSchoolMeal(
             neisProperties.authKey,
             "json",
-            page,
+            1,
             3,
             account.school.educationCode,
             account.school.adminCode,

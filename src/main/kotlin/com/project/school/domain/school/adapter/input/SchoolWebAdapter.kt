@@ -28,8 +28,8 @@ class SchoolWebAdapter(
             .let { ResponseEntity.ok(it) }
 
     @GetMapping("/meals")
-    fun findSchoolMeal(@RequestParam page: Int, @RequestBody request: FindSchoolMealRequest): ResponseEntity<List<SchoolMealResponse>> =
-        findSchoolMealUseCase.execute(page, schoolDataMapper toDto request)
+    fun findSchoolMeal(@RequestBody request: FindSchoolMealRequest): ResponseEntity<List<SchoolMealResponse>> =
+        findSchoolMealUseCase.execute(schoolDataMapper toDto request)
             .let { schoolDataMapper.toResponse(it) }
             .let { ResponseEntity.ok(it) }
 
