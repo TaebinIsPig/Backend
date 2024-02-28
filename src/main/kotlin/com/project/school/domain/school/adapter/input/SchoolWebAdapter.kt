@@ -1,6 +1,5 @@
 package com.project.school.domain.school.adapter.input
 
-import com.project.school.domain.school.adapter.input.data.request.FindSchoolMealRequest
 import com.project.school.domain.school.adapter.input.data.response.SchoolMealResponse
 import com.project.school.domain.school.adapter.input.data.response.SchoolSearchResponse
 import com.project.school.domain.school.adapter.input.mapper.SchoolDataMapper
@@ -8,7 +7,6 @@ import com.project.school.domain.school.application.port.input.FindSchoolMealUse
 import com.project.school.domain.school.application.port.input.SchoolSearchUseCase
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -28,8 +26,8 @@ class SchoolWebAdapter(
             .let { ResponseEntity.ok(it) }
 
     @GetMapping("/meals")
-    fun findSchoolMeal(@RequestBody request: FindSchoolMealRequest): ResponseEntity<List<SchoolMealResponse>> =
-        findSchoolMealUseCase.execute(schoolDataMapper toDto request)
+    fun findSchoolMeal(@RequestParam date: String): ResponseEntity<List<SchoolMealResponse>> =
+        findSchoolMealUseCase.execute(date)
             .let { schoolDataMapper.toResponse(it) }
             .let { ResponseEntity.ok(it) }
 
