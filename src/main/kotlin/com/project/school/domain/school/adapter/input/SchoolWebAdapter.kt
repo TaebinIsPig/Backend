@@ -1,9 +1,11 @@
 package com.project.school.domain.school.adapter.input
 
+import com.project.school.domain.school.adapter.input.data.response.MonthSchoolScheduleResponse
 import com.project.school.domain.school.adapter.input.data.response.SchoolMealResponse
 import com.project.school.domain.school.adapter.input.data.response.SchoolScheduleResponse
 import com.project.school.domain.school.adapter.input.data.response.SchoolSearchResponse
 import com.project.school.domain.school.adapter.input.mapper.SchoolDataMapper
+import com.project.school.domain.school.application.port.input.FindMonthSchoolScheduleUseCase
 import com.project.school.domain.school.application.port.input.FindSchoolMealUseCase
 import com.project.school.domain.school.application.port.input.FindSchoolScheduleUseCase
 import com.project.school.domain.school.application.port.input.SchoolSearchUseCase
@@ -19,7 +21,8 @@ class SchoolWebAdapter(
     private val schoolDataMapper: SchoolDataMapper,
     private val schoolSearchUseCase: SchoolSearchUseCase,
     private val findSchoolMealUseCase: FindSchoolMealUseCase,
-    private val findSchoolScheduleUseCase: FindSchoolScheduleUseCase
+    private val findSchoolScheduleUseCase: FindSchoolScheduleUseCase,
+    private val findMonthSchoolScheduleUseCase: FindMonthSchoolScheduleUseCase
 ) {
 
     @GetMapping("/search")
@@ -39,5 +42,12 @@ class SchoolWebAdapter(
         findSchoolScheduleUseCase.execute(date)
             .map { schoolDataMapper.toResponse(it) }
             .let { ResponseEntity.ok(it) }
+
+    @GetMapping("/schedule/month")
+    fun findMonthSchoolSchedule(@RequestParam date: String): ResponseEntity<List<MonthSchoolScheduleResponse>> =
+        findMonthSchoolScheduleUseCase.execute(date)
+            .map { schoolDataMapper.toResponse(it) }
+            .let { ResponseEntity.ok(it) }
+
 
 }
