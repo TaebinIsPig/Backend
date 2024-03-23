@@ -25,7 +25,7 @@ class FindSchoolScheduleService(
             key = neisProperties.authKey,
             "json",
             1,
-            1,
+            10,
             account.school.educationCode,
             account.school.adminCode,
             date
