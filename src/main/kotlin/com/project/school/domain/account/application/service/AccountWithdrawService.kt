@@ -8,6 +8,7 @@ import com.project.school.domain.account.application.port.input.AccountWithdrawU
 import com.project.school.domain.account.application.port.output.AccountSecurityPort
 import com.project.school.domain.account.application.port.output.CommandAccountPort
 import com.project.school.domain.account.application.port.output.QueryAccountPort
+import com.project.school.domain.schedule.application.port.output.CommandSchedulePort
 import org.springframework.context.ApplicationEventPublisher
 
 @ServiceWithTransaction
@@ -16,7 +17,8 @@ class AccountWithdrawService(
     private val queryAccountPort: QueryAccountPort,
     private val authenticationValidator: AuthenticationValidator,
     private val publisher: ApplicationEventPublisher,
-    private val commandAccountPort: CommandAccountPort
+    private val commandAccountPort: CommandAccountPort,
+    private val commandSchedulePort: CommandSchedulePort
 ): AccountWithdrawUseCase {
 
     override fun execute(phoneNumber: String) {
@@ -24,10 +26,11 @@ class AccountWithdrawService(
         val account = queryAccountPort.findByIdxOrNull(accountIdx)
             ?: throw AccountNotFoundException()
 
-        val authentication = authenticationValidator.verifyAuthenticationByPhoneNumber(phoneNumber)
-        val deleteAuthenticationEvent = DeleteAuthenticationEvent(authentication)
-        publisher.publishEvent(deleteAuthenticationEvent)
+//        val authentication = authenticationValidator.verifyAuthenticationByPhoneNumber(phoneNumber)
+//        val deleteAuthenticationEvent = DeleteAuthenticationEvent(authentication)
+//        publisher.publishEvent(deleteAuthenticationEvent)
 
+        commandSchedulePort.deleteAllByAccount(accountIdx)
         commandAccountPort.deleteAccount(account)
     }
 
