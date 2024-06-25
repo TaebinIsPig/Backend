@@ -18,4 +18,14 @@ class ScheduleMapper(
             account = accountMapper.toEntity(domain.account)
         )
 
+    fun toDomain(entity: ScheduleEntity?): Schedule? =
+        entity?.let {
+            Schedule(
+                idx = it.idx,
+                date = it.date,
+                content = it.content,
+                account = accountMapper.toDomain(it.account)!!
+            )
+        }
+
 }
