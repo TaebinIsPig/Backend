@@ -2,14 +2,8 @@ package com.project.school.domain.school.adapter.input.mapper
 
 import com.project.school.domain.account.application.port.input.dto.SchoolDto
 import com.project.school.domain.school.adapter.input.data.request.SchoolRequest
-import com.project.school.domain.school.adapter.input.data.response.MonthSchoolScheduleResponse
-import com.project.school.domain.school.adapter.input.data.response.SchoolMealResponse
-import com.project.school.domain.school.adapter.input.data.response.SchoolScheduleResponse
-import com.project.school.domain.school.adapter.input.data.response.SchoolSearchResponse
-import com.project.school.domain.school.application.port.input.dto.MonthSchoolScheduleDto
-import com.project.school.domain.school.application.port.input.dto.SchoolMealDto
-import com.project.school.domain.school.application.port.input.dto.SchoolScheduleDto
-import com.project.school.domain.school.application.port.input.dto.SchoolSearchDto
+import com.project.school.domain.school.adapter.input.data.response.*
+import com.project.school.domain.school.application.port.input.dto.*
 import org.springframework.stereotype.Component
 
 @Component
@@ -45,6 +39,24 @@ class SchoolDataMapper {
     fun toResponse(dto: MonthSchoolScheduleDto): MonthSchoolScheduleResponse =
         MonthSchoolScheduleResponse(
             eventDate = dto.eventDate
+        )
+
+    fun toResponse(dto: ElementarySchoolTimetableDto): ElementarySchoolTimetableResponse =
+        ElementarySchoolTimetableResponse(
+            period = dto.period,
+            subject = dto.subject
+        )
+
+    fun toResponse(dto: MiddleSchoolTimetableDto): MiddleSchoolTimetableResponse =
+        MiddleSchoolTimetableResponse(
+            period = dto.period,
+            subject = dto.subject
+        )
+
+    fun toResponse(dto: HighSchoolTimetableDto): HighSchoolTimetableResponse =
+        HighSchoolTimetableResponse(
+            period = dto.period,
+            subject = dto.subject
         )
 
 }
