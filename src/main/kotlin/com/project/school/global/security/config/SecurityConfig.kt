@@ -42,6 +42,8 @@ class SecurityConfig(
             .mvcMatchers(HttpMethod.GET, "/api/v1/school/meals").hasAuthority(Authority.ROLE_ACCOUNT.name)
             .mvcMatchers(HttpMethod.GET, "/api/v1/school/schedule").hasAuthority(Authority.ROLE_ACCOUNT.name)
             .mvcMatchers(HttpMethod.GET, "/api/v1/school/schedule/month").hasAuthority(Authority.ROLE_ACCOUNT.name)
+            .mvcMatchers(HttpMethod.GET, "/api/v1/school/timetable/elementary").hasAuthority(Authority.ROLE_ACCOUNT.name)
+            .mvcMatchers(HttpMethod.GET, "/api/v1/school/timetable/high").hasAuthority(Authority.ROLE_ACCOUNT.name)
             .mvcMatchers(HttpMethod.POST, "/api/v1/schedule/**").hasAuthority(Authority.ROLE_ACCOUNT.name)
             .anyRequest().permitAll()
     }

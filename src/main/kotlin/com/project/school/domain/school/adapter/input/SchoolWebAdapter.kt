@@ -1,14 +1,8 @@
 package com.project.school.domain.school.adapter.input
 
-import com.project.school.domain.school.adapter.input.data.response.MonthSchoolScheduleResponse
-import com.project.school.domain.school.adapter.input.data.response.SchoolMealResponse
-import com.project.school.domain.school.adapter.input.data.response.SchoolScheduleResponse
-import com.project.school.domain.school.adapter.input.data.response.SchoolSearchResponse
+import com.project.school.domain.school.adapter.input.data.response.*
 import com.project.school.domain.school.adapter.input.mapper.SchoolDataMapper
-import com.project.school.domain.school.application.port.input.FindMonthSchoolScheduleUseCase
-import com.project.school.domain.school.application.port.input.FindSchoolMealUseCase
-import com.project.school.domain.school.application.port.input.FindSchoolScheduleUseCase
-import com.project.school.domain.school.application.port.input.SchoolSearchUseCase
+import com.project.school.domain.school.application.port.input.*
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -22,7 +16,10 @@ class SchoolWebAdapter(
     private val schoolSearchUseCase: SchoolSearchUseCase,
     private val findSchoolMealUseCase: FindSchoolMealUseCase,
     private val findSchoolScheduleUseCase: FindSchoolScheduleUseCase,
-    private val findMonthSchoolScheduleUseCase: FindMonthSchoolScheduleUseCase
+    private val findMonthSchoolScheduleUseCase: FindMonthSchoolScheduleUseCase,
+    private val findElementarySchoolTimetableUseCase: FindElementarySchoolTimetableUseCase,
+    private val findMiddleSchoolTimetableUseCase: FindMiddleSchoolTimetableUseCase,
+    private val findHighSchoolTimetableUseCase: FindHighSchoolTimetableUseCase
 ) {
 
     @GetMapping("/search")
@@ -49,5 +46,22 @@ class SchoolWebAdapter(
             .map { schoolDataMapper.toResponse(it) }
             .let { ResponseEntity.ok(it) }
 
+    @GetMapping("/timetable/elementary")
+    fun findElementSchoolTimetable(@RequestParam grade: String, @RequestParam classNum: String, @RequestParam date: String): ResponseEntity<List<ElementarySchoolTimetableResponse>> =
+        findElementarySchoolTimetableUseCase.execute(grade, classNum, date)
+            .map { schoolDataMapper.toResponse(it) }
+            .let { ResponseEntity.ok(it) }
+
+    @GetMapping("/timetable/middle")
+    fun findMiddleSchoolTimetable(@RequestParam grade: String, @RequestParam classNum: String, @RequestParam date: String): ResponseEntity<List<MiddleSchoolTimetableResponse>> =
+        findMiddleSchoolTimetableUseCase.execute(grade, classNum, date)
+            .map { schoolDataMapper.toResponse(it) }
+            .let { ResponseEntity.ok(it) }
+
+    @GetMapping("/timetable/high")
+    fun findHighSchoolTimetable(@RequestParam grade: String, @RequestParam classNum: String, @RequestParam date: String): ResponseEntity<List<HighSchoolTimetableResponse>> =
+        findHighSchoolTimetableUseCase.execute(grade, classNum, date)
+            .map { schoolDataMapper.toResponse(it) }
+            .let { ResponseEntity.ok(it) }
 
 }
