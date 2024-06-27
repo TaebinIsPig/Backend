@@ -15,5 +15,6 @@ data class SchoolListResponse(
     val educationCode: String,
     val adminCode: String,
     val schoolName: String,
-    val schoolType: String
+    val schoolType: String,
+    val address: String
 )
