@@ -23,7 +23,8 @@ class SchoolSearchService(
                     educationCode = schoolListResponse.educationCode,
                     adminCode = schoolListResponse.adminCode,
                     schoolName = schoolListResponse.schoolName,
-                    schoolType = schoolListResponse.schoolType
+                    schoolType = schoolListResponse.schoolType,
+                    address = schoolListResponse.address
                 )
             }
         )

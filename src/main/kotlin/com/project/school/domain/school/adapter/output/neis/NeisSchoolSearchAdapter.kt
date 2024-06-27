@@ -58,12 +58,14 @@ class NeisSchoolSearchAdapter(
                 val adminCode = rowObject["SD_SCHUL_CODE"] as String
                 val schoolName = rowObject["SCHUL_NM"] as String
                 val schoolType = rowObject["SCHUL_KND_SC_NM"] as String
+                val address = rowObject["ORG_RDNMA"] as String
 
                 val schoolListResponse = SchoolListResponse(
                     educationCode = educationCode,
                     adminCode = adminCode,
                     schoolName = schoolName,
-                    schoolType = schoolType
+                    schoolType = schoolType,
+                    address = address
                 )
                 schoolList.add(schoolListResponse)
             }
