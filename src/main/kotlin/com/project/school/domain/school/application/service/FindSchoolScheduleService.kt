@@ -36,12 +36,14 @@ class FindSchoolScheduleService(
 
         val scheduleResponse = schedule.map {
             SchoolScheduleDto(
+                idx = it.idx,
                 eventDate = it.date,
                 eventName = it.content
             )
         }
         val schoolScheduleResponse = schoolSchedule.map {
             SchoolScheduleDto(
+                idx = null,
                 eventDate = it.eventDate,
                 eventName = it.eventName
             )
