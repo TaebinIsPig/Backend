@@ -6,6 +6,7 @@ import com.project.school.domain.schedule.adapter.output.persistence.mapper.Sche
 import com.project.school.domain.schedule.adapter.output.persistence.repository.ScheduleRepository
 import com.project.school.domain.schedule.application.port.output.QuerySchedulePort
 import com.project.school.domain.schedule.domain.Schedule
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 
 @Component
@@ -19,6 +20,11 @@ class QuerySchedulePersistenceAdapter(
         val accountEntity = accountMapper.toEntity(account)
         val scheduleEntity = scheduleRepository.findAllByDateAndAccount(date, accountEntity)
         return scheduleEntity.map { scheduleMapper.toDomain(it)!! }
+    }
+
+    override fun findByIdxOrNull(idx: Long): Schedule? {
+        val scheduleEntity = scheduleRepository.findByIdOrNull(idx)
+        return scheduleMapper.toDomain(scheduleEntity)
     }
 
 }

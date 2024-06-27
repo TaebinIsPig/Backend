@@ -7,6 +7,13 @@ import com.project.school.domain.account.domain.Account
 data class Schedule(
     val idx: Long,
     val date: String,
-    val content: String,
+    var content: String,
     val account: Account
-)
+) {
+
+    fun updateSchedule(content: String): Schedule {
+        this.content = content
+        return this
+    }
+
+}

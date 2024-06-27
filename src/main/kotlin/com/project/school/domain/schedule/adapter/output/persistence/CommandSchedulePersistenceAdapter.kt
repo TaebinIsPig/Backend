@@ -27,4 +27,9 @@ class CommandSchedulePersistenceAdapter(
             .execute()
     }
 
+    override fun deleteSchedule(schedule: Schedule) {
+        val scheduleEntity = scheduleMapper.toEntity(schedule)
+        scheduleRepository.delete(scheduleEntity)
+    }
+
 }

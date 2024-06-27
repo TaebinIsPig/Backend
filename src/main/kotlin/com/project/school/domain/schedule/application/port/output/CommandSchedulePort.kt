@@ -9,4 +9,6 @@ interface CommandSchedulePort {
 
     fun deleteAllByAccount(accountId: UUID)
 
+    fun deleteSchedule(schedule: Schedule)
+
 }
