@@ -32,5 +32,8 @@ enum class ErrorCode(
     // FEIGN
     FEIGN_BAD_REQUEST("Feign Bad Request", 400),
     FEIGN_UNAUTHORIZED("Feign Unauthorized", 401),
-    FEIGN_FORBIDDEN("Feign Forbidden", 403)
+    FEIGN_FORBIDDEN("Feign Forbidden", 403),
+
+    // SCHEDULE
+    SCHEDULE_NOT_FOUND("일정을 찾을 수 없습니다.", 404)
 }
