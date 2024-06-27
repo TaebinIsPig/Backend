@@ -7,4 +7,5 @@ interface QuerySchedulePort {
 
     fun findAllByDateAndAccount(date: String, account: Account): List<Schedule>
 
+    fun findByIdxOrNull(idx: Long): Schedule?
 }
