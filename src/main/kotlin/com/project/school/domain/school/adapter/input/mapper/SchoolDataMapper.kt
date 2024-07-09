@@ -22,41 +22,5 @@ class SchoolDataMapper {
             isLast = schoolSearchDto.isLast,
             schoolList = schoolSearchDto.schoolList
         )
-    fun toResponse(dto: SchoolMealDto): SchoolMealResponse =
-        SchoolMealResponse(
-            mealType = dto.mealType,
-            mealDate = dto.mealDate,
-            food = dto.food,
-            calorie = dto.calorie
-        )
-
-    fun toResponse(dto: SchoolScheduleDto): SchoolScheduleResponse =
-        SchoolScheduleResponse(
-            eventDate = dto.eventDate,
-            eventName = dto.eventName
-        )
-
-    fun toResponse(dto: MonthSchoolScheduleDto): MonthSchoolScheduleResponse =
-        MonthSchoolScheduleResponse(
-            eventDate = dto.eventDate
-        )
-
-    fun toResponse(dto: ElementarySchoolTimetableDto): ElementarySchoolTimetableResponse =
-        ElementarySchoolTimetableResponse(
-            period = dto.period,
-            subject = dto.subject
-        )
-
-    fun toResponse(dto: MiddleSchoolTimetableDto): MiddleSchoolTimetableResponse =
-        MiddleSchoolTimetableResponse(
-            period = dto.period,
-            subject = dto.subject
-        )
-
-    fun toResponse(dto: HighSchoolTimetableDto): HighSchoolTimetableResponse =
-        HighSchoolTimetableResponse(
-            period = dto.period,
-            subject = dto.subject
-        )
 
 }
