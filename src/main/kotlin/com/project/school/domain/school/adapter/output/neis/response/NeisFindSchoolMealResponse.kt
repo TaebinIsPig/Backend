@@ -6,4 +6,15 @@ data class NeisFindSchoolMealResponse(
     val food: List<String>?,
     val calorie: String?,
     val result: Result
-)
+) {
+    constructor() : this(
+        mealType = "",
+        mealDate = "",
+        food = listOf(),
+        calorie = "",
+        result = Result(
+            code = "",
+            message = ""
+        )
+    )
+}

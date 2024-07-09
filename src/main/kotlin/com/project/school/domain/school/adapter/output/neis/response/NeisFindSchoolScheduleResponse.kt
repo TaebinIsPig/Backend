@@ -4,4 +4,13 @@ data class NeisFindSchoolScheduleResponse(
     val eventDate: String?,
     val eventName: String?,
     val result: Result
-)
+) {
+    constructor(): this(
+        eventDate = "",
+        eventName = "",
+        result = Result(
+            code = "",
+            message = ""
+        )
+    )
+}

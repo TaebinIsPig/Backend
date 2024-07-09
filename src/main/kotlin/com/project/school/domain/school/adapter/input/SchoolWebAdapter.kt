@@ -29,39 +29,33 @@ class SchoolWebAdapter(
             .let { ResponseEntity.ok(it) }
 
     @GetMapping("/meals")
-    fun findSchoolMeal(@RequestParam date: String): ResponseEntity<List<SchoolMealResponse>> =
+    fun findSchoolMeal(@RequestParam date: String): ResponseEntity<SchoolMealResponse> =
         findSchoolMealUseCase.execute(date)
-            .map { schoolDataMapper.toResponse(it) }
             .let { ResponseEntity.ok(it) }
 
     @GetMapping("/schedule")
-    fun findSchoolSchedule(@RequestParam date: String): ResponseEntity<List<SchoolScheduleResponse>> =
+    fun findSchoolSchedule(@RequestParam date: String): ResponseEntity<SchoolScheduleResponse> =
         findSchoolScheduleUseCase.execute(date)
-            .map { schoolDataMapper.toResponse(it) }
             .let { ResponseEntity.ok(it) }
 
     @GetMapping("/schedule/month")
-    fun findMonthSchoolSchedule(@RequestParam date: String): ResponseEntity<List<MonthSchoolScheduleResponse>> =
+    fun findMonthSchoolSchedule(@RequestParam date: String): ResponseEntity<MonthSchoolScheduleResponse> =
         findMonthSchoolScheduleUseCase.execute(date)
-            .map { schoolDataMapper.toResponse(it) }
             .let { ResponseEntity.ok(it) }
 
     @GetMapping("/timetable/elementary")
-    fun findElementSchoolTimetable(@RequestParam grade: String, @RequestParam classNum: String, @RequestParam date: String): ResponseEntity<List<ElementarySchoolTimetableResponse>> =
+    fun findElementSchoolTimetable(@RequestParam grade: String, @RequestParam classNum: String, @RequestParam date: String): ResponseEntity<ElementarySchoolTimetableResponse> =
         findElementarySchoolTimetableUseCase.execute(grade, classNum, date)
-            .map { schoolDataMapper.toResponse(it) }
             .let { ResponseEntity.ok(it) }
 
     @GetMapping("/timetable/middle")
-    fun findMiddleSchoolTimetable(@RequestParam grade: String, @RequestParam classNum: String, @RequestParam date: String): ResponseEntity<List<MiddleSchoolTimetableResponse>> =
+    fun findMiddleSchoolTimetable(@RequestParam grade: String, @RequestParam classNum: String, @RequestParam date: String): ResponseEntity<MiddleSchoolTimetableResponse> =
         findMiddleSchoolTimetableUseCase.execute(grade, classNum, date)
-            .map { schoolDataMapper.toResponse(it) }
             .let { ResponseEntity.ok(it) }
 
     @GetMapping("/timetable/high")
-    fun findHighSchoolTimetable(@RequestParam grade: String, @RequestParam classNum: String, @RequestParam date: String): ResponseEntity<List<HighSchoolTimetableResponse>> =
+    fun findHighSchoolTimetable(@RequestParam grade: String, @RequestParam classNum: String, @RequestParam date: String): ResponseEntity<HighSchoolTimetableResponse> =
         findHighSchoolTimetableUseCase.execute(grade, classNum, date)
-            .map { schoolDataMapper.toResponse(it) }
             .let { ResponseEntity.ok(it) }
 
 }

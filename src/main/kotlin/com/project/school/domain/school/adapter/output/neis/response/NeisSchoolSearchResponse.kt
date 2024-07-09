@@ -9,7 +9,12 @@ data class NeisSchoolSearchResponse(
 data class Result(
     val code: String,
     val message: String
-)
+) {
+    constructor(): this(
+        code = "",
+        message = ""
+    )
+}
 
 data class SchoolListResponse(
     val educationCode: String,
