@@ -1,8 +1,9 @@
 package com.project.school.domain.school.adapter.input.data.response
 
+import com.project.school.domain.school.adapter.output.neis.response.NeisFindSchoolMealResponse
+
 data class SchoolMealResponse(
-    val mealType: String?,
-    val mealDate: String?,
-    val food: List<String>?,
-    val calorie: String?
-)
+    val schoolMealList: List<NeisFindSchoolMealResponse>
+) {
+    constructor(): this(listOf())
+}
