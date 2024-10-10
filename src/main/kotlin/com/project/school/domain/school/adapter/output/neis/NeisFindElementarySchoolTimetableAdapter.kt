@@ -65,15 +65,10 @@ class NeisFindElementarySchoolTimetableAdapter(
 
                 val elementSchoolTimetableResponse = NeisFindElementarySchoolTimetableResponse(
                     period = period,
-                    subject = subject,
-                    result = Result(
-                        code = code,
-                        message = message
-                    )
+                    subject = subject
                 )
                 elementarySchoolTimetableList.add(elementSchoolTimetableResponse)
             }
-            println(result)
             return elementarySchoolTimetableList
         } else {
             val result = JSONParser().parse(jsonObject["RESULT"].toString()) as JSONObject
@@ -81,13 +76,8 @@ class NeisFindElementarySchoolTimetableAdapter(
             val message = result["MESSAGE"] as String
             val elementSchoolTimetableResponse = NeisFindElementarySchoolTimetableResponse(
                 period = null,
-                subject = null,
-                result = Result(
-                    code = code,
-                    message = message
-                )
+                subject = null
             )
-            println(result)
             return mutableListOf(elementSchoolTimetableResponse)
         }
     }

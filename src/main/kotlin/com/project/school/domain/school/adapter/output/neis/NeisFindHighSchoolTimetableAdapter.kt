@@ -66,11 +66,7 @@ class NeisFindHighSchoolTimetableAdapter(
 
                 val highSchoolTimetableResponse = NeisFindHighSchoolTimetableResponse(
                     period = period,
-                    subject = subject,
-                    result = Result(
-                        code = code,
-                        message = message
-                    )
+                    subject = subject
                 )
                 highSchoolTimetableList.add(highSchoolTimetableResponse)
             }
@@ -81,11 +77,7 @@ class NeisFindHighSchoolTimetableAdapter(
             val message = result["MESSAGE"] as String
             val highSchoolTimetableResponse = NeisFindHighSchoolTimetableResponse(
                 period = null,
-                subject = null,
-                result = Result(
-                    code = code,
-                    message = message
-                )
+                subject = null
             )
             return mutableListOf(highSchoolTimetableResponse)
         }

@@ -1,14 +1,9 @@
 package com.project.school.domain.school.adapter.output.neis.response
 
 data class NeisFindMonthSchoolScheduleResponse(
-    val eventDate: String?,
-    val result: Result
+    val eventDate: String?
 ) {
     constructor(): this(
-        eventDate = "",
-        result = Result(
-            code = "",
-            message = ""
-        )
+        eventDate = ""
     )
 }

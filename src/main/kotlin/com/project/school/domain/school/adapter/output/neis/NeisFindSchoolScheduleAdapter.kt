@@ -61,11 +61,7 @@ class NeisFindSchoolScheduleAdapter(
 
                 val schoolScheduleResponse = NeisFindSchoolScheduleResponse(
                     eventDate = eventDate,
-                    eventName = eventName,
-                    result = Result(
-                        code = code,
-                        message = message
-                    )
+                    eventName = eventName
                 )
                 schoolScheduleList.add(schoolScheduleResponse)
             }
@@ -76,11 +72,7 @@ class NeisFindSchoolScheduleAdapter(
             val message = result["MESSAGE"] as String
             val schoolScheduleResponse = NeisFindSchoolScheduleResponse(
                 eventDate = null,
-                eventName = null,
-                result = Result(
-                    code = code,
-                    message = message
-                )
+                eventName = null
             )
             return mutableListOf(schoolScheduleResponse)
         }

@@ -60,11 +60,7 @@ class NeisFindMonthSchoolScheduleAdapter(
                 val eventDate = rowObject["AA_YMD"] as String
 
                 val monthSchoolSchedule = NeisFindMonthSchoolScheduleResponse(
-                    eventDate = eventDate,
-                    result = Result(
-                        code = code,
-                        message = message
-                    )
+                    eventDate = eventDate
                 )
                 monthSchoolScheduleList.add(monthSchoolSchedule)
             }
@@ -74,11 +70,7 @@ class NeisFindMonthSchoolScheduleAdapter(
             val code = result["CODE"] as String
             val message = result["MESSAGE"] as String
             val monthSchoolScheduleResponse = NeisFindMonthSchoolScheduleResponse(
-                eventDate = null,
-                result = Result(
-                    code = code,
-                    message = message
-                )
+                eventDate = null
             )
             return mutableListOf(monthSchoolScheduleResponse)
         }
