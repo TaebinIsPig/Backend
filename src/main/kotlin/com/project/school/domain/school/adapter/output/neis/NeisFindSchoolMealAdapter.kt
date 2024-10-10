@@ -65,11 +65,7 @@ class NeisFindSchoolMealAdapter(
                     mealType = mealType,
                     mealDate = mealDate,
                     food = food.split("<br/>"),
-                    calorie = calorie,
-                    result = Result(
-                        code = code,
-                        message = message
-                    )
+                    calorie = calorie
                 )
                 schoolMealList.add(schoolMealResponse)
             }
@@ -82,11 +78,7 @@ class NeisFindSchoolMealAdapter(
                 mealType = null,
                 mealDate = null,
                 food = null,
-                calorie = null,
-                result = Result(
-                    code = code,
-                    message = message
-                )
+                calorie = null
             )
             return mutableListOf(schoolMealResponse)
         }
