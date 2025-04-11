@@ -2,11 +2,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("org.springframework.boot") version "2.7.17"
-    id("io.spring.dependency-management") version "1.0.15.RELEASE"
-    kotlin("jvm") version "1.6.21"
-    kotlin("plugin.spring") version "1.6.21"
-    kotlin("plugin.jpa") version "1.6.21"
-    kotlin("kapt") version "1.7.10"
+    id("io.spring.dependency-management") version "1.1.6"
+    kotlin("jvm") version "1.9.10"
+    kotlin("plugin.spring") version "1.9.10"
+    kotlin("plugin.jpa") version "1.9.10"
+    kotlin("kapt") version "1.9.10"
 }
 
 group = "com.project"
@@ -39,9 +39,10 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
     implementation("io.springfox:springfox-swagger-ui:3.0.0")
     implementation("io.springfox:springfox-boot-starter:3.0.0")
-    implementation("com.googlecode.json-simple:json-simple:1.1.1")
     implementation("com.querydsl:querydsl-jpa:5.0.0")
     kapt("com.querydsl:querydsl-apt:5.0.0:jpa")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+    implementation(platform("org.springframework.cloud:spring-cloud-dependencies:2021.0.8"))
 }
 
 tasks.withType<KotlinCompile> {

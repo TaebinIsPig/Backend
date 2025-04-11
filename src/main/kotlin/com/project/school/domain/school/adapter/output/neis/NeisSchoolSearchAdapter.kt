@@ -1,21 +1,21 @@
 package com.project.school.domain.school.adapter.output.neis
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.project.school.domain.school.adapter.output.neis.dto.NeisResultDto
+import com.project.school.domain.school.adapter.output.neis.dto.NeisSchoolSearchDto
+import com.project.school.domain.school.adapter.output.neis.dto.SchoolInfoResult
 import com.project.school.domain.school.adapter.output.neis.response.NeisSchoolSearchResponse
-import com.project.school.domain.school.adapter.output.neis.response.Result
 import com.project.school.domain.school.adapter.output.neis.response.SchoolListResponse
 import com.project.school.domain.school.application.port.output.SchoolSearchPort
-import org.json.simple.JSONArray
-import org.json.simple.JSONObject
-import org.json.simple.parser.JSONParser
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpMethod
+import mu.KotlinLogging
 import org.springframework.stereotype.Component
-import org.springframework.web.client.RestTemplate
-import org.springframework.web.util.UriComponentsBuilder
+
+private val log = KotlinLogging.logger {  }
 
 @Component
 class NeisSchoolSearchAdapter(
-    private val restTemplate: RestTemplate
+    private val objectMapper: ObjectMapper,
+    private val client: NeisSchoolClient
 ) : SchoolSearchPort {
 
     override fun schoolSearch(
@@ -24,73 +24,57 @@ class NeisSchoolSearchAdapter(
         pIndex: Int,
         pSize: Int,
         schoolName: String
-    ) : NeisSchoolSearchResponse {
-        val url = "https://open.neis.go.kr/hub/schoolInfo"
+    ): NeisSchoolSearchResponse {
+        val response = client.schoolSearch(key, type, pIndex, pSize, schoolName)
 
-        val uri = UriComponentsBuilder.fromHttpUrl(url)
-            .queryParam("Type", type)
-            .queryParam("KEY", key)
-            .queryParam("pIndex", pIndex)
-            .queryParam("pSize", pSize)
-            .queryParam("SCHUL_NM", schoolName)
-            .build()
+        return if (response.contains("schoolInfo")) {
+            val root = objectMapper.readValue(response, NeisSchoolSearchDto::class.java)
 
-        val headers = org.springframework.http.HttpHeaders()
-        val request: HttpEntity<String> = HttpEntity(headers)
+            val head = root.schoolInfo.firstOrNull { it.head != null }?.head
+            val row = root.schoolInfo.firstOrNull { it.row != null }?.row
 
-        val responseEntity =
-            restTemplate.exchange(uri.toString(), HttpMethod.GET, request, String::class.java)
-
-        val schoolList = mutableListOf<SchoolListResponse>()
-
-        val jsonObject = JSONParser().parse(responseEntity.body) as JSONObject
-        val schoolInfo = JSONParser().parse(jsonObject["schoolInfo"].toString()) as JSONArray?
-        if (schoolInfo != null) {
-            val head = (schoolInfo[0] as JSONObject)["head"] as JSONArray
-            val listTotalCount = ((head[0] as JSONObject)["list_total_count"] as Long).toInt()
-            val result = (head[1] as JSONObject)["RESULT"] as JSONObject
-            val code = result["CODE"] as String
-            val message = result["MESSAGE"] as String
-            val row = (schoolInfo[1] as JSONObject)["row"] as JSONArray
-            for (i in 0 until row.size) {
-                val rowObject = row[i] as JSONObject
-                val educationCode = rowObject["ATPT_OFCDC_SC_CODE"] as String
-                val adminCode = rowObject["SD_SCHUL_CODE"] as String
-                val schoolName = rowObject["SCHUL_NM"] as String
-                val schoolType = rowObject["SCHUL_KND_SC_NM"] as String
-                val address = rowObject["ORG_RDNMA"] as String
-
-                val schoolListResponse = SchoolListResponse(
-                    educationCode = educationCode,
-                    adminCode = adminCode,
-                    schoolName = schoolName,
-                    schoolType = schoolType,
-                    address = address
-                )
-                schoolList.add(schoolListResponse)
+            if (head == null || row == null) {
+                log.warn("나이스 Open API 오류")
+                return emptyResponse()
             }
 
-            return NeisSchoolSearchResponse(
-                listTotalCount = listTotalCount,
-                result = Result(
-                    code = code,
-                    message = message
-                ),
+            val totalCount = head.firstOrNull { it.listTotalCount != null }?.listTotalCount ?: 0
+            val result = head.firstOrNull { it.result != null }?.result ?: SchoolInfoResult("ERROR", "알 수 없는 오류")
+
+            log.info(result.code)
+            log.info(result.message)
+
+            val schoolList = row.map {
+                SchoolListResponse(
+                    educationCode = it.educationCode,
+                    adminCode = it.adminCode,
+                    schoolName = it.schoolName,
+                    schoolType = it.schoolType,
+                    address = it.address
+                )
+            }
+
+            NeisSchoolSearchResponse(
+                listTotalCount = totalCount,
                 list = schoolList
             )
         } else {
-            val result = JSONParser().parse(jsonObject["RESULT"].toString()) as JSONObject
-            val code = result["CODE"] as String
-            val message = result["MESSAGE"] as String
-            return NeisSchoolSearchResponse(
+            val wrapper = objectMapper.readValue(response, NeisResultDto::class.java)
+            val result = wrapper.result
+
+            log.info(result.code)
+            log.info(result.message)
+
+            NeisSchoolSearchResponse(
                 listTotalCount = 0,
-                result = Result(
-                    code = code,
-                    message = message
-                ),
                 list = null
             )
         }
     }
+
+    private fun emptyResponse() = NeisSchoolSearchResponse(
+        listTotalCount = 0,
+        list = null
+    )
 
 }
