@@ -41,6 +41,9 @@ class NeisFindMonthSchoolScheduleAdapter(
 
             val result = head.firstOrNull { it.result != null }?.result ?: MonthSchoolScheduleResult("Error", "알 수 없는 오류")
 
+            log.info(result.code)
+            log.info(result.message)
+
             row.map {
                 NeisFindMonthSchoolScheduleResponse(
                     eventDate = it.eventDate
