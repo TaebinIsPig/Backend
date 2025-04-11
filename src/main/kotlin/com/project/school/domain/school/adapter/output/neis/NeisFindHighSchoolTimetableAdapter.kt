@@ -1,21 +1,20 @@
 package com.project.school.domain.school.adapter.output.neis
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.project.school.domain.school.adapter.output.neis.dto.HighTimetableResult
+import com.project.school.domain.school.adapter.output.neis.dto.NeisFindHighSchoolTimetableDto
+import com.project.school.domain.school.adapter.output.neis.dto.NeisResultDto
 import com.project.school.domain.school.adapter.output.neis.response.NeisFindHighSchoolTimetableResponse
-import com.project.school.domain.school.adapter.output.neis.response.Result
 import com.project.school.domain.school.application.port.output.FindHighSchoolTimetablePort
-import org.json.simple.JSONArray
-import org.json.simple.JSONObject
-import org.json.simple.parser.JSONParser
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
+import mu.KotlinLogging
 import org.springframework.stereotype.Component
-import org.springframework.web.client.RestTemplate
-import org.springframework.web.util.UriComponentsBuilder
+
+private val log = KotlinLogging.logger { }
 
 @Component
 class NeisFindHighSchoolTimetableAdapter(
-    private val restTemplate: RestTemplate
+    private val objectMapper: ObjectMapper,
+    private val neisSchoolClient: NeisSchoolClient
 ) : FindHighSchoolTimetablePort {
 
     override fun findHighSchoolTimetable(
@@ -29,58 +28,41 @@ class NeisFindHighSchoolTimetableAdapter(
         classNum: String,
         date: String
     ): List<NeisFindHighSchoolTimetableResponse> {
-        val url = "https://open.neis.go.kr/hub/hisTimetable"
+        val response = neisSchoolClient.findHighSchoolTimeTable(key, type, pIndex, pSize, educationCode, adminCode, grade, classNum, date)
 
-        val uri = UriComponentsBuilder.fromHttpUrl(url)
-            .queryParam("Key", key)
-            .queryParam("Type", type)
-            .queryParam("pIndex", pIndex)
-            .queryParam("pSize", pSize)
-            .queryParam("ATPT_OFCDC_SC_CODE", educationCode)
-            .queryParam("SD_SCHUL_CODE", adminCode)
-            .queryParam("GRADE", grade)
-            .queryParam("CLASS_NM", classNum)
-            .queryParam("ALL_TI_YMD", date)
-            .build()
+        return if (response.contains("hisTimetable")) {
+            val root = objectMapper.readValue(response, NeisFindHighSchoolTimetableDto::class.java)
 
-        val headers = HttpHeaders()
-        val request: HttpEntity<String> = HttpEntity(headers)
+            val head = root.highTimetable.firstOrNull { it.head != null }?.head
+            val row = root.highTimetable.firstOrNull { it.row != null }?.row
 
-        val responseEntity =
-            restTemplate.exchange(uri.toString(), HttpMethod.GET, request, String::class.java)
-
-        val highSchoolTimetableList = mutableListOf<NeisFindHighSchoolTimetableResponse>()
-
-        val jsonObject = JSONParser().parse(responseEntity.body) as JSONObject
-        val highSchoolTimetable = JSONParser().parse(jsonObject["hisTimetable"].toString()) as JSONArray?
-        if (highSchoolTimetable != null) {
-            val head = (highSchoolTimetable[0] as JSONObject)["head"] as JSONArray
-            val result = (head[1] as JSONObject)["RESULT"] as JSONObject
-            val code = result["CODE"] as String
-            val message = result["MESSAGE"] as String
-            val row = (highSchoolTimetable[1] as JSONObject)["row"] as JSONArray
-            for (i in 0 until row.size) {
-                val rowObject = row[i] as JSONObject
-                val period = rowObject["PERIO"] as String
-                val subject = rowObject["ITRT_CNTNT"] as String
-
-                val highSchoolTimetableResponse = NeisFindHighSchoolTimetableResponse(
-                    period = period,
-                    subject = subject
-                )
-                highSchoolTimetableList.add(highSchoolTimetableResponse)
+            if (head == null || row == null) {
+                log.warn("나이스 Open API 오류")
+                return emptyResponse()
             }
-            return highSchoolTimetableList
+
+            val result = head.firstOrNull { it.result != null }?.result ?: HighTimetableResult("ERROR", "알 수 없는 오류")
+
+            log.info(result.code)
+            log.info(result.message)
+
+            row.map {
+                NeisFindHighSchoolTimetableResponse(
+                    period = it.period,
+                    subject = it.subject
+                )
+            }
         } else {
-            val result = JSONParser().parse(jsonObject["RESULT"].toString()) as JSONObject
-            val code = result["CODE"] as String
-            val message = result["MESSAGE"] as String
-            val highSchoolTimetableResponse = NeisFindHighSchoolTimetableResponse(
-                period = null,
-                subject = null
-            )
-            return mutableListOf(highSchoolTimetableResponse)
+            val wrapper = objectMapper.readValue(response, NeisResultDto::class.java)
+            val result = wrapper.result
+
+            log.info(result.code)
+            log.info(result.message)
+
+            emptyResponse()
         }
     }
+
+    private fun emptyResponse() = emptyList<NeisFindHighSchoolTimetableResponse>()
 
 }

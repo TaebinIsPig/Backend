@@ -1,20 +1,20 @@
 package com.project.school.domain.school.adapter.output.neis
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.project.school.domain.school.adapter.output.neis.dto.NeisFindSchoolMealDto
+import com.project.school.domain.school.adapter.output.neis.dto.NeisResultDto
+import com.project.school.domain.school.adapter.output.neis.dto.SchoolMealResult
 import com.project.school.domain.school.adapter.output.neis.response.NeisFindSchoolMealResponse
-import com.project.school.domain.school.adapter.output.neis.response.Result
 import com.project.school.domain.school.application.port.output.FindSchoolMealPort
-import org.json.simple.JSONArray
-import org.json.simple.JSONObject
-import org.json.simple.parser.JSONParser
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpMethod
+import mu.KotlinLogging
 import org.springframework.stereotype.Component
-import org.springframework.web.client.RestTemplate
-import org.springframework.web.util.UriComponentsBuilder
+
+private val log = KotlinLogging.logger {  }
 
 @Component
 class NeisFindSchoolMealAdapter(
-    val restTemplate: RestTemplate
+    val objectMapper: ObjectMapper,
+    val neisSchoolClient: NeisSchoolClient
 ): FindSchoolMealPort {
 
     override fun findSchoolMeal(
@@ -26,63 +26,46 @@ class NeisFindSchoolMealAdapter(
         adminCode: String,
         date: String
     ): List<NeisFindSchoolMealResponse> {
-        val url = "https://open.neis.go.kr/hub/mealServiceDietInfo"
+        val response = neisSchoolClient.findSchoolMeal(key, type, pIndex, pSize, educationCode, adminCode, date)
+        println(response)
 
-        val uri = UriComponentsBuilder.fromHttpUrl(url)
-            .queryParam("KEY", key)
-            .queryParam("Type", type)
-            .queryParam("pIndex", pIndex)
-            .queryParam("pSize", pSize)
-            .queryParam("ATPT_OFCDC_SC_CODE", educationCode)
-            .queryParam("SD_SCHUL_CODE", adminCode)
-            .queryParam("MLSV_YMD", date)
-            .build()
+        return if (response.contains("mealServiceDietInfo")) {
+            val root = objectMapper.readValue(response, NeisFindSchoolMealDto::class.java)
+            println(root)
 
-        val headers = org.springframework.http.HttpHeaders()
-        val request: HttpEntity<String> = HttpEntity(headers)
+            val head = root.schoolMeal.firstOrNull { it.head != null }?.head
+            val row = root.schoolMeal.firstOrNull { it.row != null }?.row
 
-        val responseEntity =
-            restTemplate.exchange(uri.toString(), HttpMethod.GET, request, String::class.java)
-
-        val schoolMealList = mutableListOf<NeisFindSchoolMealResponse>()
-
-        val jsonObject = JSONParser().parse(responseEntity.body) as JSONObject
-        val mealServiceDietInfo = JSONParser().parse(jsonObject["mealServiceDietInfo"].toString()) as JSONArray?
-        if (mealServiceDietInfo != null) {
-            val head = (mealServiceDietInfo[0] as JSONObject)["head"] as JSONArray
-            val result = (head[1] as JSONObject)["RESULT"] as JSONObject
-            val code = result["CODE"] as String
-            val message = result["MESSAGE"] as String
-            val row = (mealServiceDietInfo[1] as JSONObject)["row"] as JSONArray
-            for (i in 0 until row.size) {
-                val rowObject = row[i] as JSONObject
-                val mealType = rowObject["MMEAL_SC_NM"] as String
-                val mealDate = rowObject["MLSV_YMD"] as String
-                val food = rowObject["DDISH_NM"] as String
-                val calorie = rowObject["CAL_INFO"] as String
-
-                val schoolMealResponse = NeisFindSchoolMealResponse(
-                    mealType = mealType,
-                    mealDate = mealDate,
-                    food = food.split("<br/>"),
-                    calorie = calorie
-                )
-                schoolMealList.add(schoolMealResponse)
+            if (head == null || row == null) {
+                log.warn("나이스 Open API 오류")
+                return emptyResponse()
             }
-            return schoolMealList
-        } else {
-            val result = JSONParser().parse(jsonObject["RESULT"].toString()) as JSONObject
-            val code = result["CODE"] as String
-            val message = result["MESSAGE"] as String
-            val schoolMealResponse = NeisFindSchoolMealResponse(
-                mealType = null,
-                mealDate = null,
-                food = null,
-                calorie = null
-            )
-            return mutableListOf(schoolMealResponse)
-        }
 
+            val result = head.firstOrNull { it.result != null }?.result ?: SchoolMealResult("ERROR", "알 수 없는 오류")
+
+            log.info(result.code)
+            log.info(result.message)
+
+            row.map {
+                NeisFindSchoolMealResponse(
+                    mealType = it.mealType,
+                    mealDate = it.mealDate,
+                    food = it.food.split("<br/>"),
+                    calorie = it.calorie
+                )
+            }
+        } else {
+            val wrapper = objectMapper.readValue(response, NeisResultDto::class.java)
+            println(wrapper)
+            val result = wrapper.result
+
+            log.info(result.code)
+            log.info(result.message)
+
+            emptyResponse()
+        }
     }
+
+    private fun emptyResponse() = emptyList<NeisFindSchoolMealResponse>()
 
 }
