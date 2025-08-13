@@ -24,6 +24,7 @@ class CacheConfig {
     @Bean
     fun cacheManager(caffeine: Caffeine<Any, Any>): CacheManager =
         CaffeineCacheManager(
+            "elementarySchoolTimetable"
         ).apply {
             setCaffeine(caffeine)
         }

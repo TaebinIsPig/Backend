@@ -8,8 +8,7 @@ import com.project.school.domain.school.adapter.input.data.response.ElementarySc
 import com.project.school.domain.school.adapter.output.neis.properties.NeisProperties
 import com.project.school.domain.school.application.port.input.FindElementarySchoolTimetableUseCase
 import com.project.school.domain.school.application.port.output.FindElementarySchoolTimetablePort
-import org.springframework.data.redis.core.RedisTemplate
-import java.util.concurrent.TimeUnit
+import com.project.school.domain.school.application.port.output.cache.CachePort
 
 @ServiceWithReadOnlyTransaction
 class FindElementarySchoolTimetableService(
@@ -17,7 +16,7 @@ class FindElementarySchoolTimetableService(
     private val queryAccountPort: QueryAccountPort,
     private val neisFindElementarySchoolTimetablePort: FindElementarySchoolTimetablePort,
     private val neisProperties: NeisProperties,
-    private val redisTemplate: RedisTemplate<String, Any>
+    private val cachePort: CachePort,
 ) : FindElementarySchoolTimetableUseCase {
 
     override fun execute(grade: String, classNum: String, date: String): ElementarySchoolTimetableResponse {
@@ -25,10 +24,11 @@ class FindElementarySchoolTimetableService(
         val account = queryAccountPort.findByIdxOrNull(accountIdx)
             ?: throw AccountNotFoundException()
 
-        val cacheKey = "elementarySchoolTimetable:${account.school.adminCode}/$date/$grade/$classNum"
-        val cachedData = redisTemplate.opsForValue().get(cacheKey)
-        if (cachedData != null) {
-            return cachedData as ElementarySchoolTimetableResponse
+        val cacheKey = "${account.school.adminCode}/$date/$grade/$classNum"
+        val cacheName = "elementarySchoolTimetable"
+
+        cachePort.get(cacheName, cacheKey, ElementarySchoolTimetableResponse::class.java)?.let {
+            return it
         }
 
         val elementarySchoolTimetable = neisFindElementarySchoolTimetablePort.findElementarySchoolTimetable(
@@ -43,11 +43,10 @@ class FindElementarySchoolTimetableService(
             date = date
         )
 
-        val elementarySchoolTimetableResponse = ElementarySchoolTimetableResponse(elementarySchoolTimetable)
+        val response = ElementarySchoolTimetableResponse(elementarySchoolTimetable)
+        cachePort.put(cacheName, cacheKey, response)
 
-        redisTemplate.opsForValue().set(cacheKey, elementarySchoolTimetableResponse, 24, TimeUnit.HOURS)
-
-        return elementarySchoolTimetableResponse
+        return response
     }
 
 }
