@@ -23,6 +23,7 @@ class CacheConfig {
     fun cacheManager(caffeine: Caffeine<Any, Any>): CacheManager =
         CaffeineCacheManager(
             "elementarySchoolTimetable",
+            "middleSchoolTimetable",
             "highSchoolTimetable"
         ).apply {
             setCaffeine(caffeine)
