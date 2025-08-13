@@ -9,8 +9,6 @@ import com.project.school.domain.school.adapter.output.neis.properties.NeisPrope
 import com.project.school.domain.school.application.port.input.FindMiddleSchoolTimetableUseCase
 import com.project.school.domain.school.application.port.output.FindMiddleSchoolTimetablePort
 import com.project.school.domain.school.application.port.output.cache.CachePort
-import org.springframework.data.redis.core.RedisTemplate
-import java.util.concurrent.TimeUnit
 
 @ServiceWithReadOnlyTransaction
 class FindMiddleSchoolTimetableService(
