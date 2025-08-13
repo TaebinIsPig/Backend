@@ -16,7 +16,7 @@ class FindElementarySchoolTimetableService(
     private val queryAccountPort: QueryAccountPort,
     private val neisFindElementarySchoolTimetablePort: FindElementarySchoolTimetablePort,
     private val neisProperties: NeisProperties,
-    private val cachePort: CachePort,
+    private val cachePort: CachePort
 ) : FindElementarySchoolTimetableUseCase {
 
     override fun execute(grade: String, classNum: String, date: String): ElementarySchoolTimetableResponse {
@@ -24,8 +24,8 @@ class FindElementarySchoolTimetableService(
         val account = queryAccountPort.findByIdxOrNull(accountIdx)
             ?: throw AccountNotFoundException()
 
-        val cacheKey = "${account.school.adminCode}/$date/$grade/$classNum"
         val cacheName = "elementarySchoolTimetable"
+        val cacheKey = "${account.school.adminCode}/$date/$grade/$classNum"
 
         cachePort.get(cacheName, cacheKey, ElementarySchoolTimetableResponse::class.java)?.let {
             return it
