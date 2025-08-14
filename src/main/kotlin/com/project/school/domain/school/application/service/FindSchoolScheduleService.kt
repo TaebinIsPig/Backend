@@ -8,8 +8,7 @@ import com.project.school.domain.school.adapter.input.data.response.SchoolSchedu
 import com.project.school.domain.school.adapter.output.neis.properties.NeisProperties
 import com.project.school.domain.school.application.port.input.FindSchoolScheduleUseCase
 import com.project.school.domain.school.application.port.output.FindSchoolSchedulePort
-import org.springframework.data.redis.core.RedisTemplate
-import java.util.concurrent.TimeUnit
+import com.project.school.domain.school.application.port.output.cache.CachePort
 
 @ServiceWithReadOnlyTransaction
 class FindSchoolScheduleService(
@@ -17,7 +16,7 @@ class FindSchoolScheduleService(
     private val queryAccountPort: QueryAccountPort,
     private val neisProperties: NeisProperties,
     private val neisFindSchoolSchedulePort: FindSchoolSchedulePort,
-    private val redisTemplate: RedisTemplate<String, Any>
+    private val cachePort: CachePort,
 ) : FindSchoolScheduleUseCase {
 
     override fun execute(date: String): SchoolScheduleResponse {
@@ -25,10 +24,11 @@ class FindSchoolScheduleService(
         val account = queryAccountPort.findByIdxOrNull(accountIdx)
             ?: throw AccountNotFoundException()
 
-        val cacheKey = "schoolScheduleList:${account.school.adminCode}/$date"
-        val cachedData = redisTemplate.opsForValue().get(cacheKey)
-        if (cachedData != null) {
-            return cachedData as SchoolScheduleResponse
+        val cacheName = "schoolSchedule"
+        val cacheKey = "${account.school.adminCode}/$date"
+
+        cachePort.get(cacheName, cacheKey, SchoolScheduleResponse::class.java)?.let {
+            return it
         }
 
         val schoolSchedule = neisFindSchoolSchedulePort.findSchoolSchedule(
@@ -41,11 +41,10 @@ class FindSchoolScheduleService(
             date
         )
 
-        val schoolScheduleResponse = SchoolScheduleResponse(schoolSchedule)
+        val response = SchoolScheduleResponse(schoolSchedule)
+        cachePort.put(cacheName, cacheKey, response)
 
-        redisTemplate.opsForValue().set(cacheKey, schoolScheduleResponse, 24, TimeUnit.HOURS)
-
-        return schoolScheduleResponse
+        return response
     }
 
 }

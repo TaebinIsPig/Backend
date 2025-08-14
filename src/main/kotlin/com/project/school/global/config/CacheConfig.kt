@@ -26,6 +26,7 @@ class CacheConfig {
             "middleSchoolTimetable",
             "highSchoolTimetable",
             "monthSchoolSchedule",
+            "schoolSchedule",
             "schoolMeal"
         ).apply {
             setCaffeine(caffeine)
