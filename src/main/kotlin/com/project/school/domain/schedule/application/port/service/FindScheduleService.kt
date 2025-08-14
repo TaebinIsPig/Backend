@@ -1,6 +1,7 @@
 package com.project.school.domain.schedule.application.port.service
 
 import com.project.school.common.annotation.ServiceWithReadOnlyTransaction
+import com.project.school.common.cache.port.CachePort
 import com.project.school.domain.account.application.exception.AccountNotFoundException
 import com.project.school.domain.account.application.port.output.AccountSecurityPort
 import com.project.school.domain.account.application.port.output.QueryAccountPort
@@ -8,16 +9,13 @@ import com.project.school.domain.schedule.adapter.input.data.response.FindSchedu
 import com.project.school.domain.schedule.application.port.input.FindScheduleUseCase
 import com.project.school.domain.schedule.application.port.input.dto.FindScheduleDto
 import com.project.school.domain.schedule.application.port.output.QuerySchedulePort
-import com.project.school.domain.school.adapter.input.data.response.SchoolScheduleResponse
-import org.springframework.data.redis.core.RedisTemplate
-import java.util.concurrent.TimeUnit
 
 @ServiceWithReadOnlyTransaction
 class FindScheduleService(
     private val accountSecurityPort: AccountSecurityPort,
     private val queryAccountPort: QueryAccountPort,
     private val querySchedulePort: QuerySchedulePort,
-    private val redisTemplate: RedisTemplate<String, Any>
+    private val cachePort: CachePort
 ) : FindScheduleUseCase {
 
     override fun execute(date: String): FindScheduleResponse {
@@ -25,10 +23,11 @@ class FindScheduleService(
         val account = queryAccountPort.findByIdxOrNull(accountIdx)
             ?: throw AccountNotFoundException()
 
-        val cacheKey = "scheduleList:$accountIdx/$date"
-        val cachedData = redisTemplate.opsForValue().get(cacheKey)
-        if (cachedData != null) {
-            return cachedData as FindScheduleResponse
+        val cacheName = "schedule"
+        val cacheKey = "$accountIdx/$date"
+
+        cachePort.get(cacheName, cacheKey, FindScheduleResponse::class.java)?.let {
+            return it
         }
 
         val scheduleList = querySchedulePort.findAllByDateAndAccount(date, account).map {
@@ -38,11 +37,11 @@ class FindScheduleService(
                 content = it.content
             )
         }
-        val scheduleResponse = FindScheduleResponse(scheduleList)
 
-        redisTemplate.opsForValue().set(cacheKey, scheduleResponse, 24, TimeUnit.HOURS)
+        val response = FindScheduleResponse(scheduleList)
+        cachePort.put(cacheName, cacheKey, response)
 
-        return scheduleResponse
+        return response
     }
 
 }
