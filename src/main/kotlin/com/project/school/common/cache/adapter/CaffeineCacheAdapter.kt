@@ -1,6 +1,6 @@
-package com.project.school.domain.school.adapter.output.cache
+package com.project.school.common.cache.adapter
 
-import com.project.school.domain.school.application.port.output.cache.CachePort
+import com.project.school.common.cache.port.CachePort
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Component
 

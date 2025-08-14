@@ -1,4 +1,4 @@
-package com.project.school.domain.school.application.port.output.cache
+package com.project.school.common.cache.port
 
 interface CachePort {
     fun <T> get(cacheName: String, key: String, type: Class<T>): T?
