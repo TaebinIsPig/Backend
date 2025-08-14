@@ -16,4 +16,8 @@ class CaffeineCacheAdapter(
     override fun put(cacheName: String, key: String, value: Any) {
         cacheManager.getCache(cacheName)?.put(key, value)
     }
+
+    override fun evict(cacheName: String, key: String) {
+        cacheManager.getCache(cacheName)?.evictIfPresent(key)
+    }
 }
