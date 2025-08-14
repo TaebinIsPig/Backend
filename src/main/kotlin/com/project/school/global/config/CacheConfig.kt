@@ -24,7 +24,8 @@ class CacheConfig {
         CaffeineCacheManager(
             "elementarySchoolTimetable",
             "middleSchoolTimetable",
-            "highSchoolTimetable"
+            "highSchoolTimetable",
+            "monthSchoolSchedule"
         ).apply {
             setCaffeine(caffeine)
         }
