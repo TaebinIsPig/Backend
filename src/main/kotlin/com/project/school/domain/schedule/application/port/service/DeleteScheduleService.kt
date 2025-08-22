@@ -1,7 +1,6 @@
 package com.project.school.domain.schedule.application.port.service
 
 import com.project.school.common.annotation.ServiceWithTransaction
-import com.project.school.common.cache.port.CachePort
 import com.project.school.domain.account.application.exception.AccountNotFoundException
 import com.project.school.domain.account.application.port.output.AccountSecurityPort
 import com.project.school.domain.account.application.port.output.QueryAccountPort
@@ -15,8 +14,7 @@ class DeleteScheduleService(
     private val accountSecurityPort: AccountSecurityPort,
     private val queryAccountPort: QueryAccountPort,
     private val querySchedulePort: QuerySchedulePort,
-    private val commandSchedulePort: CommandSchedulePort,
-    private val cachePort: CachePort
+    private val commandSchedulePort: CommandSchedulePort
 ) : DeleteScheduleUseCase {
 
     override fun execute(idx: Long) {
@@ -27,10 +25,6 @@ class DeleteScheduleService(
             ?: throw ScheduleNotFoundException()
 
         commandSchedulePort.deleteSchedule(schedule)
-
-        val cacheName = "schedule"
-        val cacheKey = "$accountIdx/${schedule.date}"
-        cachePort.evict(cacheName, cacheKey)
     }
 
 }

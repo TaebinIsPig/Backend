@@ -1,7 +1,6 @@
 package com.project.school.domain.schedule.application.port.service
 
 import com.project.school.common.annotation.ServiceWithTransaction
-import com.project.school.common.cache.port.CachePort
 import com.project.school.domain.account.application.exception.AccountNotFoundException
 import com.project.school.domain.account.application.port.output.AccountSecurityPort
 import com.project.school.domain.account.application.port.output.QueryAccountPort
@@ -14,8 +13,7 @@ import com.project.school.domain.schedule.domain.Schedule
 class CreateScheduleService(
     private val accountSecurityPort: AccountSecurityPort,
     private val queryAccountPort: QueryAccountPort,
-    private val commandSchedulePort: CommandSchedulePort,
-    private val cachePort: CachePort
+    private val commandSchedulePort: CommandSchedulePort
 ): CreateScheduleUseCase {
 
     override fun execute(dto: CreateScheduleDto) {
@@ -30,10 +28,6 @@ class CreateScheduleService(
             account = account
         )
         commandSchedulePort.saveSchedule(schedule)
-
-        val cacheName = "schedule"
-        val cacheKey = "$accountIdx/${dto.date}"
-        cachePort.evict(cacheName, cacheKey)
     }
 
 }

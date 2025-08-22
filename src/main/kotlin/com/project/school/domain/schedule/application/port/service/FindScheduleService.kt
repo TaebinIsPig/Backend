@@ -1,7 +1,6 @@
 package com.project.school.domain.schedule.application.port.service
 
 import com.project.school.common.annotation.ServiceWithReadOnlyTransaction
-import com.project.school.common.cache.port.CachePort
 import com.project.school.domain.account.application.exception.AccountNotFoundException
 import com.project.school.domain.account.application.port.output.AccountSecurityPort
 import com.project.school.domain.account.application.port.output.QueryAccountPort
@@ -14,21 +13,13 @@ import com.project.school.domain.schedule.application.port.output.QueryScheduleP
 class FindScheduleService(
     private val accountSecurityPort: AccountSecurityPort,
     private val queryAccountPort: QueryAccountPort,
-    private val querySchedulePort: QuerySchedulePort,
-    private val cachePort: CachePort
+    private val querySchedulePort: QuerySchedulePort
 ) : FindScheduleUseCase {
 
     override fun execute(date: String): FindScheduleResponse {
         val accountIdx = accountSecurityPort.getCurrentAccountIdx()
         val account = queryAccountPort.findByIdxOrNull(accountIdx)
             ?: throw AccountNotFoundException()
-
-        val cacheName = "schedule"
-        val cacheKey = "$accountIdx/$date"
-
-        cachePort.get(cacheName, cacheKey, FindScheduleResponse::class.java)?.let {
-            return it
-        }
 
         val scheduleList = querySchedulePort.findAllByDateAndAccount(date, account).map {
             FindScheduleDto(
@@ -39,7 +30,6 @@ class FindScheduleService(
         }
 
         val response = FindScheduleResponse(scheduleList)
-        cachePort.put(cacheName, cacheKey, response)
 
         return response
     }
