@@ -19,7 +19,7 @@ class DeleteScheduleService(
 
     override fun execute(idx: Long) {
         val accountIdx = accountSecurityPort.getCurrentAccountIdx()
-        val account = queryAccountPort.findByIdxOrNull(accountIdx)
+        queryAccountPort.findByIdxOrNull(accountIdx)
             ?: throw AccountNotFoundException()
         val schedule = querySchedulePort.findByIdxOrNull(idx)
             ?: throw ScheduleNotFoundException()

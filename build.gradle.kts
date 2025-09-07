@@ -43,6 +43,8 @@ dependencies {
     kapt("com.querydsl:querydsl-apt:5.0.0:jpa")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation(platform("org.springframework.cloud:spring-cloud-dependencies:2021.0.8"))
+    implementation("org.springframework.boot:spring-boot-starter-cache")
+    implementation("com.github.ben-manes.caffeine:caffeine")
 }
 
 tasks.withType<KotlinCompile> {

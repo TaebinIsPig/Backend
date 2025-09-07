@@ -1,6 +1,7 @@
 package com.project.school.domain.school.application.service
 
 import com.project.school.common.annotation.ServiceWithReadOnlyTransaction
+import com.project.school.common.cache.port.CachePort
 import com.project.school.domain.account.application.exception.AccountNotFoundException
 import com.project.school.domain.account.application.port.output.AccountSecurityPort
 import com.project.school.domain.account.application.port.output.QueryAccountPort
@@ -8,8 +9,6 @@ import com.project.school.domain.school.adapter.input.data.response.MonthSchoolS
 import com.project.school.domain.school.adapter.output.neis.properties.NeisProperties
 import com.project.school.domain.school.application.port.input.FindMonthSchoolScheduleUseCase
 import com.project.school.domain.school.application.port.output.FindMonthSchoolSchedulePort
-import org.springframework.data.redis.core.RedisTemplate
-import java.util.concurrent.TimeUnit
 
 @ServiceWithReadOnlyTransaction
 class FindMonthSchoolScheduleService(
@@ -17,7 +16,7 @@ class FindMonthSchoolScheduleService(
     private val queryAccountPort: QueryAccountPort,
     private val neisProperties: NeisProperties,
     private val findMonthSchoolSchedulePort: FindMonthSchoolSchedulePort,
-    private val redisTemplate: RedisTemplate<String, Any>
+    private val cachePort: CachePort
 ): FindMonthSchoolScheduleUseCase {
 
     override fun execute(date: String): MonthSchoolScheduleResponse {
@@ -25,10 +24,11 @@ class FindMonthSchoolScheduleService(
         val account = queryAccountPort.findByIdxOrNull(accountIdx)
             ?: throw AccountNotFoundException()
 
-        val cacheKey = "monthSchoolScheduleList:${account.school.adminCode}/$date"
-        val cachedData = redisTemplate.opsForValue().get(cacheKey)
-        if (cachedData != null) {
-            return cachedData as MonthSchoolScheduleResponse
+        val cacheName = "monthSchoolSchedule"
+        val cacheKey = "${account.school.adminCode}/$date"
+
+        cachePort.get(cacheName, cacheKey, MonthSchoolScheduleResponse::class.java)?.let {
+            return it
         }
 
         val monthSchoolSchedule = findMonthSchoolSchedulePort.findMonthSchoolSchedule(
@@ -41,11 +41,10 @@ class FindMonthSchoolScheduleService(
             date
         )
 
-        val monthSchoolScheduleResponse = MonthSchoolScheduleResponse(monthSchoolSchedule)
+        val response = MonthSchoolScheduleResponse(monthSchoolSchedule)
+        cachePort.put(cacheName, cacheKey, response)
 
-        redisTemplate.opsForValue().set(cacheKey, monthSchoolScheduleResponse, 24, TimeUnit.HOURS)
-
-        return monthSchoolScheduleResponse
+        return response
     }
 
 }

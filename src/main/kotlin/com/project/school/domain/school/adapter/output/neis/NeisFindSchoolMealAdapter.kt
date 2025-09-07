@@ -27,11 +27,9 @@ class NeisFindSchoolMealAdapter(
         date: String
     ): List<NeisFindSchoolMealResponse> {
         val response = neisSchoolClient.findSchoolMeal(key, type, pIndex, pSize, educationCode, adminCode, date)
-        println(response)
 
         return if (response.contains("mealServiceDietInfo")) {
             val root = objectMapper.readValue(response, NeisFindSchoolMealDto::class.java)
-            println(root)
 
             val head = root.schoolMeal.firstOrNull { it.head != null }?.head
             val row = root.schoolMeal.firstOrNull { it.row != null }?.row
@@ -56,7 +54,6 @@ class NeisFindSchoolMealAdapter(
             }
         } else {
             val wrapper = objectMapper.readValue(response, NeisResultDto::class.java)
-            println(wrapper)
             val result = wrapper.result
 
             log.info(result.code)
